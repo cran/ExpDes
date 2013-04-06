@@ -7,18 +7,12 @@ vers <- paste("R package version", meta$Version)
 
 citEntry(entry	= "Manual",
 	 title	= "Experimental Designs package",
-	 author = c(
-         person(given="Eric", middle="Batista", family="Ferreira", email="eric.ferreira@unifa-mg.edu.br",
-                role = c("aut", "cre", "com"),
-                comment = "enhancements, speed improvements, bug fixes, since 2009"),
-         person(given="Pórtya", middle="Piscitelli", family="Cavalcanti", email="portyapc@gmail.com", role="aut"),
-         person(given="Denismar", middle="Alves", family="Nogueira", email="denismar.nogueira@unifal-mg.edu.br", role="aut"),
-         ),
+	 author = personList(as.person("Eric Batista Ferreira"),
+                       as.person("Pórtya Piscitelli Cavalcanti"),
+                       as.person("Denismar Alves Nogueira")),
 	 year = year,
-	 note = paste(vers,"---",
-	 "For new features, see the 'Changelog' file (in the package source)"),
-## FIXME:  rather give the URL to the manual on CRAN ???
-##	   url = "http://stat.ethz.ch/CRAN/src/contrib/........",
+	 note = paste(vers),
+         url = "http://CRAN.R-project.org/package=ExpDes",
 	 textVersion = paste(
 	 "Ferreira, E. B., Cavalcanti, P. P., Nogueira, D. A. (",
          year, ").  ExpDes: Experimental Designs pacakge. ",

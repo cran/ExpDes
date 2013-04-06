@@ -33,10 +33,9 @@ col1<-c(col1,rep('ad',J))
 col2<-c(block,rep(1:J))
 col3<-c(resp,respAd)
 tabF2ad<-data.frame("TRAT2"=col1, "BLOCK"=col2, "RESP2"=col3)
-attach(tabF2ad)
-TRAT2<-factor(TRAT2)
-BLOCK<-factor(BLOCK)
-anava<-aov(RESP2~ BLOCK + TRAT2)
+TRAT2<-factor(tabF2ad[,1])
+BLOCK<-factor(tabF2ad[,2])
+anava<-aov(tabF2ad[,3]~ BLOCK + TRAT2)
 anavaTr<-summary(anava)
 
 SQB<-anavaTr[[1]][1,2]
@@ -220,7 +219,7 @@ cat('------------------------------------------------------------------------\n\
 ii<-0
 for(i in 1:nv2) {
 ii<-ii+1  
-  if(1-pf(Fcf1,glf1,glE)[ii]<=sigF){                                         
+  if(1-pf(Fcf1,glf1,glE)[ii]<=sigF){                                       
     if(quali[1]==TRUE){
                       cat('\n\n',fac.names[1],' inside of the level ',lf2[i],' of ',fac.names[2],'
 ------------------------------------------------------------------------')

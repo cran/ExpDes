@@ -32,11 +32,10 @@ col1<-c(col1,rep('ad',J))
 col2<-c(repet,rep(1:J))
 col3<-c(resp,respAd)
 tabF2ad<-data.frame("TRAT2"=col1, "REP"=col2, "RESP2"=col3)
-attach(tabF2ad)
-TRAT2<-factor(TRAT2)
-REP<-factor(REP)
-anava<-aov(RESP2~TRAT2)
+TRAT2<-factor(tabF2ad[,1])
+anava<-aov(tabF2ad[,3] ~ TRAT2)
 anavaTr<-summary(anava)
+
 
 SQad<-anavaTr[[1]][1,2] - (SQa+SQb+SQab)
 SQE<-anavaTr[[1]][2,2]

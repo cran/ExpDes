@@ -59,10 +59,9 @@ col1<-c(col1,rep('ad',J))
 col2<-c(block,rep(1:J))
 col3<-c(resp,respAd)
 tabF3ad<-data.frame("TRAT"=col1, "BLOCK"=col2, "RESP2"=col3)
-attach(tabF3ad)
-TRAT<-factor(TRAT)
-BLOCK<-factor(BLOCK)
-anava<-aov(RESP2~ BLOCK + TRAT)
+TRAT<-factor(tabF3ad[,1])
+BLOCK<-factor(tabF3ad[,2])
+anava<-aov(tabF3ad[,3]~ BLOCK + TRAT)
 anavaTr<-summary(anava)
 
 SQB<-anavaTr[[1]][1,2]
@@ -104,6 +103,7 @@ cat('------------------------------------------------------------------------
 Analysis of Variance Table\n------------------------------------------------------------------------\n')
 print(an)
 cat('------------------------------------------------------------------------\n\n')
+pvalor<-c(1-pf(Fca,gla,glE), 1-pf(Fcb,glb,glE), 1-pf(Fcc,glc,glE), 1-pf(Fcab,glab,glE), 1-pf(Fcac,glac,glE), 1-pf(Fcbc,glbc,glE), 1-pf(Fcabc,glabc,glE))
 
 #Teste de normalidade
 pvalor.shapiro<-shapiro.test(anava$residuals)$p.value
@@ -371,6 +371,71 @@ ii<-ii+1
         }
 
                 }
+
+#Checar o Fator3
+if(pvalor[5]>sigF && pvalor[6]>sigF) {
+  cat('\nAnalizing the effect of the factor ',fac.names[3],'
+------------------------------------------------------------------------\n')
+  
+  i<-3 
+{
+  #Para os fatores QUALITATIVOS, teste de Tukey
+  if(quali[i]==TRUE && pvalor[i]<=sigF) {
+    cat(fac.names[i])
+    if(mcomp=='tukey'){
+      tukey(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='duncan'){
+      duncan(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='lsd'){
+      lsd(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='lsdb'){
+      lsdb(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='sk'){
+      scottknott(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='snk'){
+      snk(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=="ccboot"){
+      ccboot(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+#    if(mcomp=="ccf"){
+#      ccF(resp,fatores[,i],an[8,1],an[8,2],sigT)
+#    }
+  }
+  
+  if(quali[i]==TRUE && pvalor[i]>sigF) {
+    cat(fac.names[i])
+    cat('\nAccording to the F test, the means of this factor are not different.\n')
+    mean.table<-tapply.stat(resp,fatores[,i],mean)
+    colnames(mean.table)<-c('Niveis','Medias')
+    print(mean.table)
+    cat('------------------------------------------------------------------------')
+  }
+  
+  #Para os fatores QUANTITATIVOS, regressao
+  if(quali[i]==FALSE && pvalor[i]<=sigF){
+    cat(fac.names[i])
+    reg.poly(resp, fatores[,i], an[8,1],an[8,2], an[i,1], an[i,2])
+  }
+  
+  if(quali[i]==FALSE && pvalor[i]>sigF) {
+    cat(fac.names[i])
+    cat('\nAccording to the F test, the means of this factor are not different.\n\n')
+    mean.table<-tapply.stat(resp,fatores[,i],mean)
+    colnames(mean.table)<-c('Levels','Means')
+    print(mean.table)
+    cat('------------------------------------------------------------------------')
+  }
+  
+  cat('\n')
+}
+  
+}
 }
 
 #Interacao Fator1*Fator3
@@ -547,6 +612,72 @@ ii<-ii+1
         }
 
                 }
+
+#Checar o Fator2
+if(pvalor[4]>sigF && pvalor[6]>sigF) {
+  cat('\nAnalizing the effect of the factor ',fac.names[2],'
+------------------------------------------------------------------------\n')
+  
+  i<-2
+{
+  #Para os fatores QUALITATIVOS, teste de Tukey
+  if(quali[i]==TRUE && pvalor[i]<=sigF) {
+    cat(fac.names[i])
+    if(mcomp=='tukey'){
+      tukey(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='duncan'){
+      duncan(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='lsd'){
+      lsd(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='lsdb'){
+      lsdb(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='sk'){
+      scottknott(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='snk'){
+      snk(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=="ccboot"){
+      ccboot(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+#    if(mcomp=="ccf"){
+#      ccF(resp,fatores[,i],an[8,1],an[8,2],sigT)
+#    }
+  }
+  
+  if(quali[i]==TRUE && pvalor[i]>sigF) {
+    cat(fac.names[i])
+    cat('\nAccording to the F test, the means of this factor are not different.\n')
+    mean.table<-tapply.stat(resp,fatores[,i],mean)
+    colnames(mean.table)<-c('Niveis','Medias')
+    print(mean.table)
+    cat('------------------------------------------------------------------------')
+  }
+  
+  #Para os fatores QUANTITATIVOS, regressao
+  if(quali[i]==FALSE && pvalor[i]<=sigF){
+    cat(fac.names[i])
+    reg.poly(resp, fatores[,i], an[8,1],an[8,2], an[i,1], an[i,2])
+  }
+  
+  if(quali[i]==FALSE && pvalor[i]>sigF) {
+    cat(fac.names[i])
+    cat('\nAccording to the F test, the means of this factor are not different.\n\n')
+    mean.table<-tapply.stat(resp,fatores[,i],mean)
+    colnames(mean.table)<-c('Levels','Means')
+    print(mean.table)
+    cat('------------------------------------------------------------------------')
+  }
+  
+  cat('\n')
+}
+  
+}
+
 }
 
 #Interacao Fator2*Fator3
@@ -723,6 +854,72 @@ ii<-ii+1
         }
 
                 }
+
+#Checar o Fator1
+if(pvalor[4]>sigF && pvalor[5]>sigF) {
+  cat('\nAnalizing the effect of the factor ',fac.names[1],'
+------------------------------------------------------------------------\n')
+  
+  i<-1
+{
+  #Para os fatores QUALITATIVOS, teste de Tukey
+  if(quali[i]==TRUE && pvalor[i]<=sigF) {
+    cat(fac.names[i])
+    if(mcomp=='tukey'){
+      tukey(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='duncan'){
+      duncan(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='lsd'){
+      lsd(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='lsdb'){
+      lsdb(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='sk'){
+      scottknott(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=='snk'){
+      snk(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+    if(mcomp=="ccboot"){
+      ccboot(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
+#    if(mcomp=="ccf"){
+#      ccF(resp,fatores[,i],an[8,1],an[8,2],sigT)
+#    }
+  }
+  
+  if(quali[i]==TRUE && pvalor[i]>sigF) {
+    cat(fac.names[i])
+    cat('\nAccording to the F test, the means of this factor are not different.\n')
+    mean.table<-tapply.stat(resp,fatores[,i],mean)
+    colnames(mean.table)<-c('Niveis','Medias')
+    print(mean.table)
+    cat('------------------------------------------------------------------------')
+  }
+  
+  #Para os fatores QUANTITATIVOS, regressao
+  if(quali[i]==FALSE && pvalor[i]<=sigF){
+    cat(fac.names[i])
+    reg.poly(resp, fatores[,i], an[8,1],an[8,2], an[i,1], an[i,2])
+  }
+  
+  if(quali[i]==FALSE && pvalor[i]>sigF) {
+    cat(fac.names[i])
+    cat('\nAccording to the F test, the means of this factor are not different.\n\n')
+    mean.table<-tapply.stat(resp,fatores[,i],mean)
+    colnames(mean.table)<-c('Levels','Means')
+    print(mean.table)
+    cat('------------------------------------------------------------------------')
+  }
+  
+  cat('\n')
+}
+  
+}
+
 }
 
 
