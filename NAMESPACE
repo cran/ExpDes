@@ -1,1 +1,7 @@
 exportPattern("^[[:alpha:]]+")
+import(stargazer)
+importFrom(grDevices, dev.new)
+importFrom(graphics, abline, boxplot, curve, hist, lines, mtext, par, plot, points, title)
+importFrom(stats, anova, aov, dnorm, kmeans, lm, model.tables, pchisq, pf, ppoints, pt, ptukey, qnorm, qt, qtukey, runif, shapiro.test, var)
+importFrom(utils, combn, read.table)
+importFrom(stats, AIC, coef, fitted, fitted.values, nls, residuals)

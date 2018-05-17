@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{tukey}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Multiple comparison: Tukey's test
-}
-\description{
-Performs the test of Tukey, for multiple comparison of means.
-}
+\title{Multiple comparison: Tukey's test}
+\description{Performs the test of Tukey, for multiple comparison of means.}
 \usage{
 tukey(y, trt, DFerror, SSerror, alpha = 0.05, group = TRUE, main = NULL)
 }
@@ -51,7 +47,13 @@ Portya Piscitelli Cavalcanti
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-LSD.test, waller.test
+\code{\link{snk}}, \code{\link{duncan}}, \code{\link{lsd}}, \code{\link{lsdb}}, \code{\link{ccboot}}, \code{\link{scottknott}}, \code{\link{ccf}} 
+}
+
+\examples{
+data(ex1)
+attach(ex1)
+crd(trat, ig, quali = TRUE, mcomp='tukey', sigT = 0.05)
 }
 %\examples{
 

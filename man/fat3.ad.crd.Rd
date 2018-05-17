@@ -2,14 +2,12 @@
 \Rdversion{1.1}
 \alias{fat3.ad.crd}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Triple factorial scheme plus an additional treatment in CRD
-}
-\description{
-Analyses experiments in balanced Completely Randomized Design in triple factorial scheme with an additional treatment, considering a fixed model.
-}
+\title{Triple factorial scheme plus an additional treatment in CRD}
+\description{Analyses experiments in balanced Completely Randomized Design in triple factorial scheme with an additional treatment, considering a fixed model.}
 \usage{
-fat3.ad.crd(factor1, factor2, factor3, repet, resp, respAd, quali = c(TRUE, TRUE, TRUE), mcomp = "tukey", fac.names = c("F1", "F2", "F3"), sigT = 0.05, sigF = 0.05)
+fat3.ad.crd(factor1, factor2, factor3, repet, resp, respAd, 
+quali = c(TRUE, TRUE, TRUE), mcomp = "tukey", fac.names = c("F1", "F2", "F3"), 
+sigT = 0.05, sigF = 0.05)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,9 +18,7 @@ fat3.ad.crd(factor1, factor2, factor3, repet, resp, respAd, quali = c(TRUE, TRUE
   \item{resp}{Numeric or complex vector containing the response variable.}
   \item{respAd}{Numeric or complex vector containing the additional treatment.}
   \item{quali}{Logic. If TRUE (default), the treatments are assumed qualitative, if FALSE, quantitatives.}
-  \item{mcomp}{Allows choosing the multiple comparison test; the \emph{default} is the test of Tukey, however, the options are: the LSD test ('lsd'),
-  the LSD test with Bonferroni protection ('lsdb'), the test of Duncan ('duncan'), the test of Student-Newman-Keuls ('snk'), the test of Scott-Knott
-  ('sk') and bootstrap multiple comparison's test ('ccboot').}
+  \item{mcomp}{Allows choosing the multiple comparison test; the \emph{default} is the test of Tukey, however, the options are: the LSD test ('lsd'), the LSD test with Bonferroni protection ('lsdb'), the test of Duncan ('duncan'), the test of Student-Newman-Keuls ('snk'), the test of Scott-Knott ('sk'), the Calinski and Corsten test ('ccf') and bootstrap multiple comparison's test ('ccboot').}
   \item{fac.names}{Allows labeling the factors 1, 2 and 3.}
   \item{sigT}{The signficance to be used for the multiple comparison test; the default is 5\%.}
   \item{sigF}{The signficance to be used for the F test of ANOVA; the default is 5\%.}
@@ -44,19 +40,23 @@ Eric Batista Ferreira
    
 Portya Piscitelli Cavalcanti
 }
-%\note{
-%%  ~~further notes~~
+
+\note{
+The \code{\link{graphics}} can be used to construct regression plots and \code{\link{plotres}} for residuals plots
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-For more examples, see: fat2.crd, fat2.rbd, fat3.crd, fat3.rbd, fat2.ad.crd, fat2.ad.rbd and fat3.ad.rbd.
+For more examples, see: \code{\link{fat2.crd}}, \code{\link{fat2.rbd}}, \code{\link{fat3.crd}}, \code{\link{fat3.rbd}}, \code{\link{fat2.ad.crd}}, \code{\link{fat2.ad.rbd}}, \code{\link{fat3.ad.crd}} and \code{\link{fat3.ad.rbd}}.
 }
+
 \examples{
 data(ex6)
 attach(ex6)
 data(respAd)
-fat3.ad.crd(fatorA, fatorB, fatorC, rep, resp, respAd, quali = c(TRUE, TRUE, TRUE), mcomp = "duncan", fac.names = c("Factor A", "Factor B", "Factor C"), sigT = 0.05, sigF = 0.05)
+fat3.ad.crd(fatorA, fatorB, fatorC, rep, resp, respAd, quali = c(TRUE, TRUE, TRUE), 
+ mcomp = "duncan", fac.names = c("Factor A", "Factor B", "Factor C"), sigT = 0.05, sigF = 0.05)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

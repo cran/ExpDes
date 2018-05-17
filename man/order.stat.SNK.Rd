@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{order.stat.SNK}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Grouping the treatments averages in a comparison with a minimum value
-}
-\description{
-Orders the groups of means according to the test of SNK.
-}
+\title{Grouping the treatments averages in a comparison with a minimum value}
+\description{Orders the groups of means according to the test of SNK.}
 \usage{
 order.stat.SNK(treatment, means, minimum)
 }

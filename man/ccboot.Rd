@@ -1,12 +1,8 @@
 \name{ccboot}
 \alias{ccboot}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Multiple comparison: Bootstrap
-}
-\description{
-Performs the Ramos and Ferreira (2009) multiple comparison bootstrap test.
-}
+\title{Multiple comparison: Bootstrap}
+\description{Performs the Ramos and Ferreira (2009) multiple comparison bootstrap test.}
 \usage{
 ccboot(y, trt, DFerror, SSerror, alpha = 0.05, group = TRUE, main = NULL, B = 1000)
 }
@@ -42,13 +38,14 @@ Eric Batista Ferreira
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-%\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\seealso{
+\code{\link{snk}}, \code{\link{duncan}}, \code{\link{lsd}}, \code{\link{lsdb}}, \code{\link{tukey}}, \code{\link{scottknott}}, \code{\link{ccf}} 
+}
 
 \examples{
 data(ex1)
 attach(ex1)
-crd(trat, ig, quali = TRUE, mcomp='ccboot', sigF = 0.05)
+crd(trat, ig, quali = TRUE, mcomp='ccboot', sigT = 0.05)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

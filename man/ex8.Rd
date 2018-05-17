@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{ex8}
 \docType{data}
-\title{
-Composting: double factorial scheme plus one additional treatment in CRD.
-}
-\description{
-Experiment in greenhouses to observe the performance of the obtained composting for fertilizing sorghum.
-}
+\title{Composting: double factorial scheme plus one additional treatment in CRD.}
+\description{Experiment in greenhouses to observe the performance of the obtained composting for fertilizing sorghum.}
 \usage{data(ex8)}
 \format{
   A data frame with 24 observations on the following 5 variables.

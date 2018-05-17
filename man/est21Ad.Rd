@@ -1,12 +1,8 @@
 \name{est21Ad}
 \alias{est21Ad}
 \docType{data}
-\title{
-Stink bugs in corn: additional treatment
-}
-\description{
-Additional treatment response variable (height of corn plants) of the experiment on stink bugs.
-}
+\title{Stink bugs in corn: additional treatment}
+\description{Additional treatment response variable (height of corn plants) of the experiment on stink bugs.}
 \usage{data(est21Ad)}
 \format{
   The format is:

@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{scottknott}
 
-\title{
-Multiple comparison: Scott-Knott test
-}
-\description{
-Performs the test of Scott-Knott, for multiple comparison of means
-}
+\title{Multiple comparison: Scott-Knott test}
+\description{Performs the test of Scott-Knott, for multiple comparison of means.}
 \usage{
 scottknott(y, trt, DFerror, SSerror, alpha = 0.05, group = TRUE, main = NULL)
 }
@@ -44,10 +40,15 @@ Portya Piscitelli Cavalcanti
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-%\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\seealso{
+\code{\link{snk}}, \code{\link{duncan}}, \code{\link{lsd}}, \code{\link{lsdb}}, \code{\link{ccboot}}, \code{\link{tukey}}, \code{\link{ccf}} 
+}
 
-%\examples{
+\examples{
+data(ex1)
+attach(ex1)
+crd(trat, ig, quali = TRUE, mcomp='sk', sigT = 0.05)
+}
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

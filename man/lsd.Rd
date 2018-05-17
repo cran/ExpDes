@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{lsd}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Multiple comparison: Least Significant Difference test
-}
-\description{
-Performs the t test (LSD) for multiple comparison of means.
-}
+\title{Multiple comparison: Least Significant Difference test}
+\description{Performs the t test (LSD) for multiple comparison of means.}
 \usage{
 lsd(y, trt, DFerror, SSerror, alpha = 0.05, group = TRUE, main = NULL)
 }
@@ -42,10 +38,15 @@ Portya Piscitelli Cavalcanti
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-%\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\seealso{
+see: \code{\link{snk}}, \code{\link{duncan}}, \code{\link{ccboot}}, \code{\link{lsdb}}, \code{\link{scottknott}}, \code{\link{tukey}}, \code{\link{ccf}} 
+}
 
-%\examples{
+\examples{
+data(ex1)
+attach(ex1)
+crd(trat, ig, quali = TRUE, mcomp='lsd', sigT = 0.05)
+}
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -1,7 +1,6 @@
 latsd <-
 function(treat, row, column, resp, quali=TRUE, mcomp='tukey', sigT=0.05, sigF=0.05) {
 
-
 Trat<-factor(treat)
 Linha<-factor(row)
 Coluna<-factor(column)
@@ -50,9 +49,15 @@ if(quali==TRUE) {
   if(mcomp=='snk'){
     snk(resp,Trat,tab[[1]][4,1],tab[[1]][4,2],sigT)
                     }
+  if(mcomp=='ccboot'){
+    ccboot(resp,Trat,tab[[1]][4,1],tab[[1]][4,2],sigT)
+                    }
+    if(mcomp=='ccf'){
+    ccf(resp,Trat,tab[[1]][4,1],tab[[1]][4,2],sigT)
+                    }
                 }   
 else{
-    reg.poly(resp, treat, tab[[1]][4,1], tab[[1]][4,2], tab[[1]][1,1], tab[[1]][1,2])
+    reg<-reg.poly(resp, treat, tab[[1]][4,1], tab[[1]][4,2], tab[[1]][1,1], tab[[1]][1,2])
 }
                        }
 else {
@@ -63,4 +68,14 @@ print(mean.table)
 cat('------------------------------------------------------------------------\n')
 }                       
 
+#Saida
+out<-list()
+out$residuals<-anava$residuals
+out$df.residual<-anava$df.residual
+out$coefficients<-anava$coefficients
+out$effects<-anava$effects
+out$fitted.values<-anava$fitted.values
+out$means<-tapply.stat(resp,treat,mean)
+if(quali==FALSE && tab[[1]][1,5]<sigF) {out$reg<-reg}
+invisible(out)
 }

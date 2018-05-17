@@ -1,12 +1,8 @@
 \name{ex}
 \alias{ex}
 \docType{data}
-\title{
-Vines: Split-Plot in Randomized Blocks Design
-}
-\description{
-Experiment about vines (not published) where one studied the effects of different fertilizers and harvest dates on the pH of grapes.
-}
+\title{Vines: Split-Plot in Randomized Blocks Design}
+\description{Experiment about vines (not published) where one studied the effects of different fertilizers and harvest dates on the pH of grapes.}
 \usage{data(ex)}
 \format{
   A data frame with 24 observations on the following 4 variables.

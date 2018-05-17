@@ -3,22 +3,16 @@
 \alias{ExpDes}
 \docType{package}
 
-\title{Experimental Designs package}
+\title{Experimental Designs}
 
 \description{
-Package for analysis of simple experimental designs (CRD, RBD and LSD), experiments in double factorial schemes (in CRD and RBD), experiments in a
-split plot in time schemes (in CRD and RBD), experiments in double factorial schemes with an additional treatment (in CRD and RBD), experiments in
-triple factorial scheme (in CRD and RBD) and experiments in triple factorial schemes with an additional treatment (in CRD and RBD), performing the
-analysis of variance and means comparison by fitting regression models until the third power (quantitative treatments) or by a multiple comparison
-test, Tukey test, test of Student-Newman-Keuls (SNK), Scott-Knott, Duncan test, t test (LSD), Bonferroni t test (protected LSD) and bootstrap multiple
-comparison's test - for qualitative treaments.
-}
+Package for analysis of simple experimental designs (CRD, RBD and LSD), experiments in double factorial schemes (in CRD and RBD), experiments in a split plot in time schemes (in CRD and RBD), experiments in double factorial schemes with an additional treatment (in CRD and RBD), experiments in triple factorial scheme (in CRD and RBD) and experiments in triple factorial schemes with an additional treatment (in CRD and RBD), performing the analysis of variance and means comparison by fitting regression models until the third power (quantitative treatments) or by a multiple comparison test, Tukey test, test of Student-Newman-Keuls (SNK), Scott-Knott, Duncan test, t test (LSD), Bonferroni t test (protected LSD) and bootstrap multiple comparison's test (qualitative treaments); residual analysis (Ferreira, Cavalcanti and Nogueira, 2014) <doi:10.4236/am.2014.519280>.}
 \details{
 \tabular{ll}{
 Package: \tab ExpDes\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2010-11-09\cr
+Version: \tab 1.2\cr
+Date: \tab 2018-05-17\cr
 License:  \tab GPL 2\cr
 LazyLoad: \tab yes\cr
 }
@@ -89,6 +83,8 @@ VENABLES, W. N.; RIPLEY, B. D. Modern Applied Statistics with S-PLUS. Third Edit
 %~~ the R documentation directory ~~
 \keyword{ package }
 
-%\seealso{
+\seealso{
+see: \code{\link{crd}}, \code{\link{rbd}}, \code{\link{fat2.crd}}, \code{\link{fat3.crd}}, \code{\link{split2.crd}}, \code{\link{fat2.ad.crd}}, \code{\link{fat3.ad.crd}}, \code{\link{fat2.rbd}}, \code{\link{fat3.rbd}}, \code{\link{split2.rbd}}, \code{\link{strip}}, \code{\link{fat2.ad.rbd}} e \code{\link{fat3.ad.rbd}} 
+}
 %\examples{
 %~~ simple examples of the most important functions ~~

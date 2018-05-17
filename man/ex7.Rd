@@ -2,13 +2,8 @@
 \Rdversion{1.1}
 \alias{ex7}
 \docType{data}
-\title{
-Height of corn plants 21 days after emergence.
-}
-\description{
-We evaluated the height of corn plants 21 days after emergence under infestation of stink bugs (Dichelops) at different times of coexistence
-(period) and infestation levels (level). Additional treatment is period zero and level zero.
-}
+\title{Height of corn plants 21 days after emergence.}
+\description{We evaluated the height of corn plants 21 days after emergence under infestation of stink bugs (Dichelops) at different times of coexistence (period) and infestation levels (level). Additional treatment is period zero and level zero.}
 \usage{data(ex7)}
 \format{
   Data frame with 80 observations on the following 4 variables.

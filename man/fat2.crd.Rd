@@ -2,14 +2,11 @@
 \Rdversion{1.1}
 \alias{fat2.crd}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Double factorial scheme in CRD
-}
-\description{
-Analyses experiments in balanced Completely Randomized Design in double factorial scheme, considering a fixed model.
-}
+\title{Double factorial scheme in CRD}
+\description{Analyses experiments in balanced Completely Randomized Design in double factorial scheme, considering a fixed model.}
 \usage{
-fat2.crd(factor1, factor2, resp, quali = c(TRUE, TRUE), mcomp = "tukey", fac.names = c("F1", "F2"), sigT = 0.05, sigF = 0.05)
+fat2.crd(factor1, factor2, resp, quali = c(TRUE, TRUE), mcomp = "tukey", 
+fac.names = c("F1", "F2"), sigT = 0.05, sigF = 0.05)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -17,10 +14,7 @@ fat2.crd(factor1, factor2, resp, quali = c(TRUE, TRUE), mcomp = "tukey", fac.nam
   \item{factor2}{Numeric or complex vector containing the factor 2 levels.}
   \item{resp}{Numeric or complex vector containing the response variable.}
   \item{quali}{Logic. If TRUE (default), the treatments are assumed qualitative, if FALSE, quantitatives.}
-  \item{mcomp}{Allows choosing the multiple comparison test; the \emph{default} is the test of Tukey, however, the options are: the LSD test ('lsd'),
-  the LSD test with Bonferroni protection ('lsdb'), the test of Duncan ('duncan'), the test of Student-Newman-Keuls ('snk'), the test of Scott-Knott
-  ('sk') and bootstrap multiple comparison's test ('ccboot').
-}
+  \item{mcomp}{Allows choosing the multiple comparison test; the \emph{default} is the test of Tukey, however, the options are: the LSD test ('lsd'), the LSD test with Bonferroni protection ('lsdb'), the test of Duncan ('duncan'), the test of Student-Newman-Keuls ('snk'), the test of Scott-Knott ('sk'), the Calinski and Corsten test ('ccf') and bootstrap multiple comparison's test ('ccboot').}
   \item{fac.names}{
 Allows labeling the factors 1 and 2.
 }
@@ -48,18 +42,22 @@ Eric Batista Ferreira
     
 Portya Piscitelli Cavalcanti
 }
-%\note{
-%%  ~~further notes~~
+
+\note{
+The \code{\link{graphics}} can be used to construct regression plots and \code{\link{plotres}} for residuals plots
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-For more examples, see: fat2.rbd, fat3.crd, fat3.rbd, fat2.ad.crd, fat2.ad.rbd, fat3.ad.crd and fat3.ad.rbd.
+For more examples, see: \code{\link{crd}}, \code{\link{fat3.crd}}, \code{\link{split2.crd}}, \code{\link{fat2.ad.crd}} and \code{\link{fat3.ad.crd}}.
 }
+
 \examples{
 data(ex4)
 attach(ex4)
-fat2.crd(revol, esterco, zn, quali=c(FALSE,TRUE), mcomp="tukey", fac.names=c("Revolving","Manure"), sigT = 0.05, sigF = 0.05)
+fat2.crd(revol, esterco, zn, quali=c(FALSE,TRUE), mcomp="tukey", 
+ fac.names=c("Revolving","Manure"), sigT = 0.05, sigF = 0.05)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{reg.poly}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Polinomial Regression
-}
-\description{
-Fits sequencial regression models until the third power.
-}
+\title{Polinomial Regression}
+\description{Fits sequencial regression models until the third power.}
 \usage{
 reg.poly(resp, treat, DFerror, SSerror, DFtreat, SStreat)
 }
@@ -41,8 +37,7 @@ Portya Piscitelli Cavalcanti
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-%\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\seealso{ See: \code{\link{graphics}}}
 
 %\examples{
 

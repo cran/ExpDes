@@ -18,7 +18,7 @@ tab1<-summary(anava)
 #tab1$'Error: Fator1'[[1]]<-cbind(tab1$'Error: Fator1'[[1]], 1-pf(tab1$'Error: Fator1'[[1]][1,4],
 #  tab1$'Error: Fator1'[[1]][1,1],tab1$'Error: Fator1:repet'[[1]][1,1]))
 tab1[[1]]<-rbind(tab1[[1]][1,],tab1[[1]][4,],tab1[[1]][2,],tab1[[1]][3,],tab1[[1]][5,])
-colnames(tab1[[1]])<-c('DF', 'SS', 'MS', 'Fc', 'Pr(>Fc)')
+colnames(tab1[[1]])<-c('DF', 'SS', 'MS', 'Fc', 'Pr>Fc')
 tab<-tab1[[1]]
 tab<-rbind(tab,apply(tab,2,sum))
 rownames(tab)<-c(fac.names[1],'Error a',fac.names[2],paste(fac.names[1],'*',fac.names[2],sep=''),'Error b','Total')
@@ -29,7 +29,8 @@ cv1=sqrt(tab[2,3])/mean(resp)*100
 cv2=sqrt(tab[5,3])/mean(resp)*100
 tab[6,3:5]<-tab[2,4:5]<-''
 
-output<-list('Analysis of Variance Table\n------------------------------------------------------------------------\n' = tab)
+
+output<-list('Analysis of Variance Table' = tab)
 cat('------------------------------------------------------------------------\n')
 print(output,right=TRUE)
 cat('------------------------------------------------------------------------
@@ -47,10 +48,20 @@ fatores<-data.frame('fator 1' = factor1,'fator 2' = factor2)
 #------------------------------------------------------------------------\n')}
 #else{cat('De acordo com o teste de Shapiro-Wilk a 5% de significancia, os residuos podem ser considerados normais.
 #------------------------------------------------------------------------\n')}
+#Teste de normalidade
+pvalor.shapiro<-shapiro.test(anava$residuals)$p.value
+cat('\n------------------------------------------------------------------------\nShapiro-Wilk normality test (Error b)\n')
+cat('p-value: ',pvalor.shapiro, '\n')
+if(pvalor.shapiro<0.05){cat('WARNING: at 5% of significance, residuals can not be considered normal!
+------------------------------------------------------------------------\n')}
+else{cat('According to Shapiro-Wilk normality test at 5% of significance, residuals can be considered normal.
+------------------------------------------------------------------------\n')}
+
+
 
 #Para interacao nao significativa, fazer...
 if(as.numeric(tab[4,5])>sigF) {
-cat('\nNo significant interaction: analyzing the simple effects
+cat('\nNo significant interaction: analyzing the main effects
 ------------------------------------------------------------------------\n')
 
 for(i in 1:2){
@@ -80,12 +91,15 @@ if(quali[i]==TRUE && as.numeric(tab[cont[i],5])<=sigF) {
   if(mcomp=='ccboot'){
     ccboot(resp,fatores[,i],as.numeric(tab[cont[i]+i,1]),as.numeric(tab[cont[i]+i,2]),sigT)
                    }
+  if(mcomp=='ccf'){
+    ccf(resp,fatores[,i],as.numeric(tab[cont[i]+i,1]),as.numeric(tab[cont[i]+i,2]),sigT)
+                  }
+           }
 
-                   }
-
-if(quali[i]==TRUE && as.numeric(tab[cont[i],5]>sigF)) {
+if(quali[i]==TRUE && as.numeric(tab[cont[i],5])>sigF) {
     cat(fac.names[i])
     cat('\nAccording to F test, the means of this factor are not different.\n')
+    cat('------------------------------------------------------------------------\n')
     mean.table<-tapply.stat(resp,fatores[,i],mean)
     colnames(mean.table)<-c('Levels','Means')
     print(mean.table)
@@ -100,7 +114,8 @@ if(quali[i]==FALSE && as.numeric(tab[cont[i],5])<=sigF){
 
 if(quali[i]==FALSE && as.numeric(tab[cont[i],5])>sigF) {
     cat(fac.names[i])
-    cat('\nAccording to the F test, the means of this factor are not different.\n\n')
+    cat('\nAccording to the F test, the means of this factor are not different.\n')
+    cat('------------------------------------------------------------------------\n')
     mean.table<-tapply.stat(resp,fatores[,i],mean)
     colnames(mean.table)<-c('Levels','Means')
     print(mean.table)
@@ -189,7 +204,10 @@ for(i in 1:nv2) {
   if(mcomp=='ccboot'){
     ccboot(resp[fatores[,2]==l2[i]],fatores[,1][fatores[,2]==l2[i]],as.numeric(tab.f1f2[nv2+1,1]),as.numeric(tab.f1f2[nv2+1,2]),sigT)
                    }
-                                                   }
+  if(mcomp=='ccf'){
+    ccf(resp[fatores[,2]==l2[i]],fatores[,1][fatores[,2]==l2[i]],as.numeric(tab.f1f2[nv2+1,1]),as.numeric(tab.f1f2[nv2+1,2]),sigT)
+                    }
+                                                     }
 
 if(quali[1]==FALSE & as.numeric(tab.f1f2[i,5])<sigF) {             
     reg.poly(resp[fatores[,2]==l2[i]], fatores[,1][fatores[,2]==l2[i]], as.numeric(tab.f1f2[nv2+1,1]),
@@ -197,7 +215,8 @@ if(quali[1]==FALSE & as.numeric(tab.f1f2[i,5])<sigF) {
                                                    }
             
 if(as.numeric(tab.f1f2[i,5])>sigF) {
-    cat('\nAccording to F test, the means of this factor are not distinct.\n\n')
+    cat('\nAccording to F test, the means of this factor are not distinct.\n')
+    cat('------------------------------------------------------------------------\n')
     mean.table<-tapply.stat(resp[fatores[,2]==l2[i]],fatores[,1][fatores[,2]==l2[i]],mean)
     colnames(mean.table)<-c('Levels','Means')
     print(mean.table)
@@ -275,7 +294,11 @@ for(i in 1:nv1) {
                    }
   if(mcomp=='ccboot'){
     ccboot(resp[fatores[,1]==l1[i]],fatores[,2][fatores[,1]==l1[i]],as.numeric(tab.f2f1[nv1+1,1]),as.numeric(tab.f2f1[nv1+1,2]),sigT)
-                   }
+                    }
+  if(mcomp=='ccf'){
+    ccf(resp[fatores[,1]==l1[i]],fatores[,2][fatores[,1]==l1[i]],as.numeric(tab.f2f1[nv1+1,1]),as.numeric(tab.f2f1[nv1+1,2]),sigT)
+                  }
+    
     cat('------------------------------------------------------------------------\n\n')
                                                       }
     
@@ -287,7 +310,8 @@ for(i in 1:nv1) {
                    
 
 if(as.numeric(tab.f2f1[i,5])>sigF) {
-    cat('\nAccording to F test, the means of this factor are not different.\n\n')
+    cat('\nAccording to F test, the means of this factor are not different.\n')
+    cat('------------------------------------------------------------------------\n')
     mean.table<-tapply.stat(resp[fatores[,1]==l1[i]],fatores[,2][fatores[,1]==l1[i]],mean)
     colnames(mean.table)<-c('Levels','Means')
     print(mean.table)
@@ -296,7 +320,22 @@ if(as.numeric(tab.f2f1[i,5])>sigF) {
 
 }
 
-
-
 }
+## error a ##
+tabmedia<-model.tables(anava, "means")
+error.plot<-as.vector(t(as.matrix(tabmedia$tables$`Fator1:repet`)-as.vector(tabmedia$tables$Fator1)))
+#Saida
+out<-list()
+out$residuals<-anava$residuals
+out$residuals.a<-error.plot
+out$df.residual<-anava$df.residual
+out$df.residual.a<-as.numeric(tab[2,1])
+out$coefficients<-anava$coefficients
+out$effects<-anava$effects
+out$fitted.values<-anava$fitted.values
+out$means.factor1<-tapply.stat(resp,fatores[,1],mean)
+out$means.factor2<-tapply.stat(resp,fatores[,2],mean)
+out$means.inside<-tabmedia$tables$`Fator1:Fator2`
+#if(quali==FALSE && tab[[1]][1,5]<sigF) {out$reg<-reg}
+invisible(out)
 }

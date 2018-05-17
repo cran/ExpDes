@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{latsd}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Latin Square Design
-}                        
-\description{
-Analyses experiments in balanced Latin Square Design, considering a fixed model.
-}
+\title{Latin Square Design}                        
+\description{Analyses experiments in balanced Latin Square Design, considering a fixed model.}
 \usage{
 latsd(treat, row, column, resp, quali = TRUE, mcomp = "tukey", sigT = 0.05, sigF = 0.05)
 }
@@ -18,9 +14,7 @@ latsd(treat, row, column, resp, quali = TRUE, mcomp = "tukey", sigT = 0.05, sigF
   \item{column}{Numeric or complex vector containing the columns.}
   \item{resp}{Numeric or complex vector containing the response variable.}
   \item{quali}{Logic. If TRUE (default), the treatments are assumed qualitative, if FALSE, quantitatives.}
-  \item{mcomp}{Allows choosing the multiple comparison test; the \emph{default} is the test of Tukey, however, the options are: the LSD test ('lsd'),
-  the LSD test with Bonferroni protection ('lsdb'), the test of Duncan ('duncan'), the test of Student-Newman-Keuls ('snk'), the test of Scott-Knott
-  ('sk') and bootstrap multiple comparison's test ('ccboot').}
+  \item{mcomp}{Allows choosing the multiple comparison test; the \emph{default} is the test of Tukey, however, the options are: the LSD test ('lsd'), the LSD test with Bonferroni protection ('lsdb'), the test of Duncan ('duncan'), the test of Student-Newman-Keuls ('snk'), the test of Scott-Knott ('sk'), the Calinski and Corsten test ('ccf') and bootstrap multiple comparison's test ('ccboot').}
   \item{sigT}{The signficance to be used for the multiple comparison test; the default is 5\%.}
   \item{sigF}{The signficance to be used for the F test of ANOVA; the default is 5\%.}
 }
@@ -46,14 +40,17 @@ Eric Batista Ferreira
     
 Portya Piscitelli Cavalcanti
 }
-%\note{
-%%  ~~further notes~~
+
+\note{
+The \code{\link{graphics}} can be used to construct regression plots and \code{\link{plotres}} for residuals plots
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-For more examples, see: crd and rbd
+For more examples, see: \code{\link{crd}}, \code{\link{rbd}}
 }
+
 \examples{
 data(ex3)
 attach(ex3)

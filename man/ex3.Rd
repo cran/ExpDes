@@ -1,12 +1,8 @@
 \name{ex3}
 \alias{ex3}
 \docType{data}
-\title{
-Forage: LSD
-}
-\description{
-Data from an experiment aiming to select forage for minimizing the intake problem of feeding cattle in the sub-region of Paiaguas.
-}
+\title{Forage: LSD}
+\description{Data from an experiment aiming to select forage for minimizing the intake problem of feeding cattle in the sub-region of Paiaguas.}
 \usage{data(ex3)}
 \format{
   A data frame with 49 observations on the following 4 variables.

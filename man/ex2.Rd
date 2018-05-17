@@ -1,12 +1,8 @@
 \name{ex2}
 \alias{ex2}
 \docType{data}
-\title{
-Food bars: RBD
-}
-\description{
-Sensory evaluation of food bars where panelists (blocks) evaluated their appearance.
-}
+\title{Food bars: RBD}
+\description{Sensory evaluation of food bars where panelists (blocks) evaluated their appearance.}
 \usage{data(ex2)}
 \format{
   A data frame with 350 observations on the following 3 variables.

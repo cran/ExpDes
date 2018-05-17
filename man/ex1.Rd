@@ -1,12 +1,8 @@
 \name{ex1}
 \alias{ex1}
 \docType{data}
-\title{
-Yacon: CRD
-}
-\description{
-Experiment aiming to evaluate the influence of the yacon flour consumption on the glicemic index.
-}
+\title{Yacon: CRD}
+\description{Experiment aiming to evaluate the influence of the yacon flour consumption on the glicemic index.}
 \usage{data(ex1)}
 \format{
   A data frame with 24 observations on the following 2 variables.

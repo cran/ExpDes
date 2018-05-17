@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{order.group}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Ordering the treatments according to the multiple comparison
-}
-\description{
-Orders the groups os means.
-}
+\title{Ordering the treatments according to the multiple comparison}
+\description{Orders the groups os means.}
 \usage{
 order.group(trt, means, N, MSerror, Tprob, std.err, parameter = 1)
 }

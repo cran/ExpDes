@@ -2,14 +2,11 @@
 \Rdversion{1.1}
 \alias{split2.crd}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Split-plots in CRD
-}
-\description{
-Analyses experiments in Split-plot scheme in balanced Completely Randomized Design, considering a fixed model.
-}
+\title{Split-plots in CRD}
+\description{Analyses experiments in Split-plot scheme in balanced Completely Randomized Design, considering a fixed model.}
 \usage{
-split2.crd(factor1, factor2, repet, resp, quali = c(TRUE, TRUE), mcomp = "tukey", fac.names = c("F1", "F2"), sigT = 0.05, sigF = 0.05)
+split2.crd(factor1, factor2, repet, resp, quali = c(TRUE, TRUE), mcomp = "tukey", 
+fac.names = c("F1", "F2"), sigT = 0.05, sigF = 0.05)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,7 +17,7 @@ split2.crd(factor1, factor2, repet, resp, quali = c(TRUE, TRUE), mcomp = "tukey"
   \item{quali}{Logic. If TRUE (default), the treatments are assumed qualitative, if FALSE, quantitatives.}
   \item{mcomp}{Allows choosing the multiple comparison test; the \emph{default} is the test of Tukey, however, the options are: the LSD test ('lsd'),
   the LSD test with Bonferroni protection ('lsdb'), the test of Duncan ('duncan'), the test of Student-Newman-Keuls ('snk'), the test of Scott-Knott
-  ('sk') and bootstrap multiple comparison's test ('ccboot').}
+  ('sk'), the Calinski and Corsten test ('ccf') and bootstrap multiple comparison's test ('ccboot').}
   \item{fac.names}{Allows labeling the factors 1 and 2.}
   \item{sigT}{The signficance to be used for the multiple comparison test; the default is 5\%.}
   \item{sigF}{The signficance to be used for the F test of ANOVA; the default is 5\%.}
@@ -42,18 +39,22 @@ Eric Batista Ferreira
 
 Portya Piscitelli Cavalcanti
 }
-%\note{
-%%  ~~further notes~~
+
+\note{
+The \code{\link{graphics}} can be used to construct regression plots and \code{\link{plotres}} for residuals plots
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-%\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\seealso{
+\code{\link{split2.rbd}} and \code{\link{strip}}
+}
 
 \examples{
 data(ex9)
 attach(ex9)
-split2.crd(cobertura, prof, rep, pH, quali = c(TRUE, TRUE), mcomp = "lsd", fac.names = c("Cover", "Depth"), sigT = 0.05, sigF = 0.05)
+split2.crd(cobertura, prof, rep, pH, quali = c(TRUE, TRUE), mcomp = "lsd", 
+ fac.names = c("Cover", "Depth"), sigT = 0.05, sigF = 0.05)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

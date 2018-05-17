@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{tapply.stat}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Statistics of data grouped by factors
-}
-\description{
-This process lies in finding statistics which consist of more than one variable, grouped or crossed by factors. The table must be organized by columns between variables and factors. 
-}
+\title{Statistics of data grouped by factors}
+\description{This process lies in finding statistics which consist of more than one variable, grouped or crossed by factors. The table must be organized by columns between variables and factors.}
 \usage{
 tapply.stat(y, x, stat = "mean")
 }

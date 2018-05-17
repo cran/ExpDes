@@ -1,12 +1,8 @@
 \name{ex5}
 \alias{ex5}
 \docType{data}
-\title{
-Food bars: Double Factorial scheme in RBD
-}
-\description{
-Data adapted from a sensorial experiment where panelists of different genders evaluated the taste of food bars.
-}
+\title{Food bars: Double Factorial scheme in RBD}
+\description{Data adapted from a sensorial experiment where panelists of different genders evaluated the taste of food bars.}
 \usage{data(ex5)}
 \format{
   A data frame with 160 observations on the following 4 variables.

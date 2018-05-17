@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{secaAd}
 \docType{data}
-\title{
-Composting: additional treatment
-}
-\description{
-Response variable (dry biomass) of the additional treatment of the experiment about composting.
-}
+\title{Composting: additional treatment}
+\description{Response variable (dry biomass) of the additional treatment of the experiment about composting.}
 \usage{data(secaAd)}
 \format{
   The format is:

@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{respAd}
 \docType{data}
-\title{
-Fictional data: additional treatment
-}
-\description{
-Response variable form the additional treatment.
-}
+\title{Fictional data: additional treatment}
+\description{Response variable form the additional treatment.}
 \usage{data(respAd)}
 \format{
   The format is:

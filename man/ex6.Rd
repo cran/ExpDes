@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{ex6}
 \docType{data}
-\title{
-Fictional data 1
-}
-\description{
-Data simulated from a standard normal distribution for an experiment in triple factorial scheme.
-}
+\title{Fictional data 1}
+\description{Data simulated from a standard normal distribution for an experiment in triple factorial scheme.}
 \usage{data(ex6)}
 \format{
   A data frame with 24 observations on the following 5 variables.

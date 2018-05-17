@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{lastC}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Setting the last character of a chain
-}
-\description{
-A special function for the group of treatments in the multiple comparison tests. Use order.group.
-}
+\title{Setting the last character of a chain}
+\description{A special function for the group of treatments in the multiple comparison tests. Use order.group.}
 \usage{
 lastC(x)
 }

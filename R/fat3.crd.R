@@ -1,5 +1,6 @@
 fat3.crd <-
-function(factor1, factor2, factor3, resp, quali=c(TRUE,TRUE,TRUE), mcomp='tukey', fac.names=c('F1','F2','F3'), sigT=0.05, sigF=0.05) {
+function(factor1, factor2, factor3, resp, quali=c(TRUE,TRUE,TRUE), mcomp='tukey', 
+                   fac.names=c('F1','F2','F3'), sigT=0.05, sigF=0.05) {
 
 cat('------------------------------------------------------------------------\nLegend:\n')
 cat('FACTOR 1: ',fac.names[1],'\n')
@@ -64,7 +65,7 @@ Fcabc=QMabc/QME
 #Montando a tabela da ANAVA
 an<-data.frame("DF"=c(gla, glb, glc, glab, glac, glbc, glabc, glE, glT ),
 "SS"=c(round(c(SQa,SQb,SQc,SQab,SQac,SQbc,SQabc,SQE,SQT),5)),
-"MS"=c(round(c(QMa,QMb,QMc,QMab,QMac,QMbc,QMabc,QME,QMT),5)),
+"MS"=c(round(c(QMa,QMb,QMc,QMab,QMac,QMbc,QMabc,QME),5),''),
 "Fc"=c(round(c(Fca,Fcb,Fcc,Fcab,Fcac,Fcbc,Fcabc),4),'',''),
 "Pr>Fc"=c(round(c(1-pf(Fca,gla,glE), 1-pf(Fcb,glb,glE), 1-pf(Fcc,glc,glE), 1-pf(Fcab,glab,glE), 1-pf(Fcac,glac,glE), 
 1-pf(Fcbc,glbc,glE), 1-pf(Fcabc,glabc,glE)),4), ' ', ' '))
@@ -74,8 +75,11 @@ paste(fac.names[2],'*',fac.names[3],sep=''),paste(fac.names[1],'*',fac.names[2],
 cat('------------------------------------------------------------------------
 Analysis of Variance Table\n------------------------------------------------------------------------\n')
 print(an)
-cat('------------------------------------------------------------------------\n\n')
+cat('------------------------------------------------------------------------\n')
 pvalor<-c(1-pf(Fca,gla,glE), 1-pf(Fcb,glb,glE), 1-pf(Fcc,glc,glE), 1-pf(Fcab,glab,glE), 1-pf(Fcac,glac,glE), 1-pf(Fcbc,glbc,glE), 1-pf(Fcabc,glabc,glE))
+#CV
+cv<-round(sqrt(as.numeric(an[8,3]))/mean(resp)*100, 2)
+cat('CV =',cv,'%\n')
 
 #Teste de normalidade
 pvalor.shapiro<-shapiro.test(anava$residuals)$p.value
@@ -88,7 +92,7 @@ if(pvalor.shapiro>0.05){cat('According to Shapiro-Wilk normality test at 5% of s
 
 #Para nenhuma interacao significativa, fazer...
 if(1-pf(Fcab,glab,glE)>sigF && 1-pf(Fcac,glac,glE)>sigF && 1-pf(Fcbc,glbc,glE)>sigF && 1-pf(Fcabc,glabc,glE)>sigF) {
-cat('\nNot significant interaction: analyzing the simple effect
+cat('\nNo significant interaction: analyzing the simple effect
 ------------------------------------------------------------------------\n')
 fatores<-data.frame('fator 1'=factor1,'fator 2' = factor2,'fator 3' = factor3)
 
@@ -117,10 +121,14 @@ if(quali[i]==TRUE && pvalor[i]<=sigF) {
   if(mcomp=='ccboot'){
     ccboot(resp,fatores[,i],an[8,1],an[8,2],sigT)
                     }
+  if(mcomp=='ccf'){
+    ccf(resp,fatores[,i],an[8,1],an[8,2],sigT)
+                    }
                    }
 if(quali[i]==TRUE && pvalor[i]>sigF) {
     cat(fac.names[i])
     cat('\nAccording to the F test, the means of this factor are statistical equal.\n')
+    cat('------------------------------------------------------------------------\n')
 mean.table<-tapply.stat(resp,fatores[,i],mean)
 colnames(mean.table)<-c('Levels','Means')
 print(mean.table)
@@ -135,7 +143,8 @@ if(quali[i]==FALSE && pvalor[i]<=sigF){
 
 if(quali[i]==FALSE && pvalor[i]>sigF) {
     cat(fac.names[i])
-    cat('\nAccording to the F test, the means of this factor are statistical equal.\n\n')
+    cat('\nAccording to the F test, the means of this factor are statistical equal.\n')
+    cat('------------------------------------------------------------------------\n')
 mean.table<-tapply.stat(resp,fatores[,i],mean)
 colnames(mean.table)<-c('Levels','Means')
 print(mean.table)
@@ -179,7 +188,7 @@ QMf1=SQf1/glf1
 Fcf1=QMf1/QME
 
 rn<-numeric(0)
-for(i in 1:nv2){ rn<-c(rn, paste(paste(fac.names[2],':',fac.names[1],sep=''),lf2[i]))}
+for(i in 1:nv2){ rn<-c(rn, paste(paste(fac.names[1],':',fac.names[2],sep=''),lf2[i]))}
 
 anavad1<-data.frame("DF"=c(glf1, glE),
 "SS"=c(round(c(SQf1,SQE),5)),
@@ -221,7 +230,10 @@ ii<-ii+1
                         if(mcomp=='ccboot'){
                           ccboot(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],an[8,1],an[8,2],sigT)
                                         }
-                      }
+                        if(mcomp=='ccf'){
+                          ccf(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],an[8,1],an[8,2],sigT)
+                                        }                
+                        }
     else{  #regressao
     cat('\n\n',fac.names[1],' inside of the level ',lf2[i],' of ',fac.names[2],'
 ------------------------------------------------------------------------')
@@ -230,6 +242,7 @@ ii<-ii+1
                               }
     else{cat('\n\n',fac.names[1],' inside of the level ',lf2[i],' of ',fac.names[2],'\n')
     cat('\nAccording to the F test, the means of this factor are statistical equal.\n')
+    cat('------------------------------------------------------------------------\n')
         mean.table<-tapply.stat(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],mean)
         colnames(mean.table)<-c('  Levels','    Means')
         print(mean.table)
@@ -264,7 +277,7 @@ QMf2=SQf2/glf2
 Fcf2=QMf2/QME
 
 rn<-numeric(0)
-for(k in 1:nv1){ rn<-c(rn, paste(paste(fac.names[1],':',fac.names[2],sep=''),lf1[k]))}
+for(k in 1:nv1){ rn<-c(rn, paste(paste(fac.names[2],':',fac.names[1],sep=''),lf1[k]))}
 
 anavad2<-data.frame("DF"=c(glf2, glE),
 "SS"=c(round(c(SQf2,SQE),5)),
@@ -305,8 +318,11 @@ ii<-ii+1
                                         }
                         if(mcomp=='ccboot'){
                           ccboot(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],an[8,1],an[8,2],sigT)
-                                        }
-                      }
+                                          }
+                        if(mcomp=='ccf'){
+                          ccf(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],an[8,1],an[8,2],sigT)
+                                          }
+                        }
     else{  #regressao
         cat('\n\n',fac.names[2],' inside of the level ',lf1[i],' of ',fac.names[1],'
 ------------------------------------------------------------------------')
@@ -315,6 +331,7 @@ ii<-ii+1
                              }
     else{cat('\n\n',fac.names[2],' inside of the level ',lf1[i],' of ',fac.names[1],'\n')
     cat('\nAccording to the F test, the means of this factor are statistical equal.\n')
+    cat('------------------------------------------------------------------------\n')
         mean.table<-tapply.stat(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],mean)
         colnames(mean.table)<-c('  Levels','    Means')
         print(mean.table)
@@ -354,14 +371,15 @@ if(pvalor[5]>sigF && pvalor[6]>sigF) {
     if(mcomp=="ccboot"){
       ccboot(resp,fatores[,i],an[8,1],an[8,2],sigT)
     }
-#    if(mcomp=="ccf"){
-#      ccF(resp,fatores[,i],an[8,1],an[8,2],sigT)
-#    }
+    if(mcomp=="ccf"){
+      ccf(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
   }
   
   if(quali[i]==TRUE && pvalor[i]>sigF) {
     cat(fac.names[i])
     cat('\nAccording to the F test, the means of this factor are not different.\n')
+    cat('------------------------------------------------------------------------\n')
     mean.table<-tapply.stat(resp,fatores[,i],mean)
     colnames(mean.table)<-c('Niveis','Medias')
     print(mean.table)
@@ -376,7 +394,8 @@ if(pvalor[5]>sigF && pvalor[6]>sigF) {
   
   if(quali[i]==FALSE && pvalor[i]>sigF) {
     cat(fac.names[i])
-    cat('\nAccording to the F test, the means of this factor are not different.\n\n')
+    cat('\nAccording to the F test, the means of this factor are not different.\n')
+    cat('------------------------------------------------------------------------\n')
     mean.table<-tapply.stat(resp,fatores[,i],mean)
     colnames(mean.table)<-c('Levels','Means')
     print(mean.table)
@@ -420,7 +439,7 @@ QMf3=SQf3/glf3
 Fcf3=QMf3/QME
 
 rn<-numeric(0)
-for(j in 1:nv3){ rn<-c(rn, paste(paste(fac.names[3],':',fac.names[1],sep=''),lf3[j]))}
+for(j in 1:nv3){ rn<-c(rn, paste(paste(fac.names[1],':',fac.names[3],sep=''),lf3[j]))}
 
 anavad3<-data.frame("DF"=c(glf3, glE),
 "SS"=c(round(c(SQf3,SQE),5)),
@@ -462,7 +481,10 @@ ii<-ii+1
                         if(mcomp=='ccboot'){
                           ccboot(resp[Fator3==lf3[i]],fatores[,1][Fator3==lf3[i]],an[8,1],an[8,2],sigT)
                                         }
-                      }
+                        if(mcomp=='ccf'){
+                          ccf(resp[Fator3==lf3[i]],fatores[,1][Fator3==lf3[i]],an[8,1],an[8,2],sigT)
+                                        }
+                        }
     else{  #regressao
     cat('\n\n',fac.names[1],' inside of the level ',lf3[i],' of ',fac.names[3],'
 ------------------------------------------------------------------------')
@@ -471,6 +493,7 @@ ii<-ii+1
                               }
     else{cat('\n\n',fac.names[1],' inside of the level ',lf3[i],' of ',fac.names[3],'\n')
     cat('\nAccording to the F test, the means of this factor are statistical equal.\n')
+    cat('------------------------------------------------------------------------\n')
         mean.table<-tapply.stat(resp[Fator3==lf3[i]],fatores[,1][Fator3==lf3[i]],mean)
         colnames(mean.table)<-c('  Levels','    Means')
         print(mean.table)
@@ -505,7 +528,7 @@ QMf4=SQf4/glf4
 Fcf4=QMf4/QME
 
 rn<-numeric(0)
-for(k in 1:nv1){ rn<-c(rn, paste(paste(fac.names[1],':',fac.names[3],sep=''),lf1[k]))}
+for(k in 1:nv1){ rn<-c(rn, paste(paste(fac.names[3],':',fac.names[1],sep=''),lf1[k]))}
 
 anavad4<-data.frame("DF"=c(glf4, glE),
 "SS"=c(round(c(SQf4,SQE),5)),
@@ -547,7 +570,10 @@ ii<-ii+1
                         if(mcomp=='ccboot'){
                           ccboot(resp[Fator1==lf1[i]],fatores[,3][Fator1==lf1[i]],an[8,1],an[8,2],sigT)
                                         }
-                      }
+                        if(mcomp=='ccf'){
+                          ccf(resp[Fator1==lf1[i]],fatores[,3][Fator1==lf1[i]],an[8,1],an[8,2],sigT)
+                                        }
+                        }
     else{  #regressao
         cat('\n\n',fac.names[3],' inside of the level ',lf1[i],' of ',fac.names[1],'
 ------------------------------------------------------------------------')
@@ -556,6 +582,7 @@ ii<-ii+1
                              }
     else{cat('\n\n',fac.names[3],' inside of the level ',lf1[i],' of ',fac.names[1],'\n')
     cat('\nAccording to the F test, the means of this factor are statistical equal.\n')
+    cat('------------------------------------------------------------------------\n')
         mean.table<-tapply.stat(resp[Fator1==lf1[i]],fatores[,3][Fator1==lf1[i]],mean)
         colnames(mean.table)<-c('  Levels','    Means')
         print(mean.table)
@@ -595,14 +622,15 @@ if(pvalor[4]>sigF && pvalor[6]>sigF) {
     if(mcomp=="ccboot"){
       ccboot(resp,fatores[,i],an[8,1],an[8,2],sigT)
     }
-#    if(mcomp=="ccf"){
-#      ccF(resp,fatores[,i],an[8,1],an[8,2],sigT)
-#    }
+    if(mcomp=="ccf"){
+      ccf(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
   }
   
   if(quali[i]==TRUE && pvalor[i]>sigF) {
     cat(fac.names[i])
     cat('\nAccording to the F test, the means of this factor are not different.\n')
+    cat('------------------------------------------------------------------------\n')
     mean.table<-tapply.stat(resp,fatores[,i],mean)
     colnames(mean.table)<-c('Niveis','Medias')
     print(mean.table)
@@ -618,6 +646,7 @@ if(pvalor[4]>sigF && pvalor[6]>sigF) {
   if(quali[i]==FALSE && pvalor[i]>sigF) {
     cat(fac.names[i])
     cat('\nAccording to the F test, the means of this factor are not different.\n\n')
+    cat('------------------------------------------------------------------------\n')
     mean.table<-tapply.stat(resp,fatores[,i],mean)
     colnames(mean.table)<-c('Levels','Means')
     print(mean.table)
@@ -661,7 +690,7 @@ QMf5=SQf5/glf5
 Fcf5=QMf5/QME
 
 rn<-numeric(0)
-for(j in 1:nv3){ rn<-c(rn, paste(paste(fac.names[3],':',fac.names[2],sep=''),lf3[j]))}
+for(j in 1:nv3){ rn<-c(rn, paste(paste(fac.names[2],':',fac.names[3],sep=''),lf3[j]))}
 
 anavad5<-data.frame("DF"=c(glf5, glE),
 "SS"=c(round(c(SQf5,SQE),5)),
@@ -703,6 +732,9 @@ ii<-ii+1
                         if(mcomp=='ccboot'){
                           ccboot(resp[Fator3==lf3[i]],fatores[,2][Fator3==lf3[i]],an[8,1],an[8,2],sigT)
                                         }
+                        if(mcomp=='ccf'){
+                          ccf(resp[Fator3==lf3[i]],fatores[,2][Fator3==lf3[i]],an[8,1],an[8,2],sigT)
+                                        }
                       }
     else{  #regressao
     cat('\n\n',fac.names[2],' inside of the level ',lf3[i],' of ',fac.names[3],'
@@ -712,6 +744,7 @@ ii<-ii+1
                               }
     else{cat('\n\n',fac.names[2],' inside of the level ',lf3[i],' of ',fac.names[3],'\n')
     cat('\nAccording to the F test, the means of this factor are statistical equal.\n')
+    cat('------------------------------------------------------------------------\n')
         mean.table<-tapply.stat(resp[Fator3==lf3[i]],fatores[,2][Fator3==lf3[i]],mean)
         colnames(mean.table)<-c('  Levels','    Means')
         print(mean.table)
@@ -746,7 +779,7 @@ QMf6=SQf6/glf6
 Fcf6=QMf6/QME
 
 rn<-numeric(0)
-for(i in 1:nv2){ rn<-c(rn, paste(paste(fac.names[2],':',fac.names[3],sep=''),lf2[i]))}
+for(i in 1:nv2){ rn<-c(rn, paste(paste(fac.names[3],':',fac.names[2],sep=''),lf2[i]))}
 
 anavad6<-data.frame("DF"=c(glf6, glE),
 "SS"=c(round(c(SQf6,SQE),5)),
@@ -788,7 +821,10 @@ ii<-ii+1
                         if(mcomp=='ccboot'){
                           ccboot(resp[Fator2==lf2[i]],fatores[,3][Fator2==lf2[i]],an[8,1],an[8,2],sigT)
                                         }
-                      }
+                        if(mcomp=='ccf'){
+                          ccf(resp[Fator2==lf2[i]],fatores[,3][Fator2==lf2[i]],an[8,1],an[8,2],sigT)
+                                        }
+                            }
     else{  #regressao
         cat('\n\n',fac.names[3],' inside of the leve ',lf2[i],' of ',fac.names[2],'
 ------------------------------------------------------------------------')
@@ -797,6 +833,7 @@ ii<-ii+1
                              }
     else{cat('\n\n',fac.names[3],' inside of the leve ',lf2[i],' of ',fac.names[2],'\n')
     cat('\nAccording to the F test, the means of this factor are statistical equal.\n')
+    cat('------------------------------------------------------------------------\n')
         mean.table<-tapply.stat(resp[Fator2==lf2[i]],fatores[,3][Fator2==lf2[i]],mean)
         colnames(mean.table)<-c('  Levels','    Means')
         print(mean.table)
@@ -836,14 +873,15 @@ if(pvalor[4]>sigF && pvalor[5]>sigF) {
     if(mcomp=="ccboot"){
       ccboot(resp,fatores[,i],an[8,1],an[8,2],sigT)
     }
-#    if(mcomp=="ccf"){
-#      ccF(resp,fatores[,i],an[8,1],an[8,2],sigT)
-#    }
+    if(mcomp=="ccf"){
+      ccf(resp,fatores[,i],an[8,1],an[8,2],sigT)
+    }
   }
   
   if(quali[i]==TRUE && pvalor[i]>sigF) {
     cat(fac.names[i])
     cat('\nAccording to the F test, the means of this factor are not different.\n')
+    cat('------------------------------------------------------------------------\n')
     mean.table<-tapply.stat(resp,fatores[,i],mean)
     colnames(mean.table)<-c('Niveis','Medias')
     print(mean.table)
@@ -858,7 +896,8 @@ if(pvalor[4]>sigF && pvalor[5]>sigF) {
   
   if(quali[i]==FALSE && pvalor[i]>sigF) {
     cat(fac.names[i])
-    cat('\nAccording to the F test, the means of this factor are not different.\n\n')
+    cat('\nAccording to the F test, the means of this factor are not different.\n')
+    cat('------------------------------------------------------------------------\n')
     mean.table<-tapply.stat(resp,fatores[,i],mean)
     colnames(mean.table)<-c('Levels','Means')
     print(mean.table)
@@ -944,7 +983,10 @@ ii<-0
                         if(mcomp=='ccboot'){
                           ccboot(resp[fatores[,2]==lf2[i] & fatores[,3]==lf3[j]],fatores[,1][Fator2==lf2[i] & Fator3==lf3[j]],an[8,1],an[8,2],sigT)
                                         }
-                      }
+                        if(mcomp=='ccf'){
+                          ccf(resp[fatores[,2]==lf2[i] & fatores[,3]==lf3[j]],fatores[,1][Fator2==lf2[i] & Fator3==lf3[j]],an[8,1],an[8,2],sigT)
+                                        }
+                        }
     else{  #regressao
     cat('\n\n',fac.names[1],' inside of the combination of the levels ',lf2[i],' of ',fac.names[2],' and ',lf3[j],' of ',fac.names[3],'
 ------------------------------------------------------------------------')
@@ -954,6 +996,7 @@ ii<-0
                                         
     else{cat('\n\n',fac.names[1],' inside of the combination of the levels ',lf2[i],' of ',fac.names[2],' and ',lf3[j],' of ',fac.names[3],'\n')
     cat('\nAccording to the F test, the means of this factor are statistical equal.\n')
+    cat('------------------------------------------------------------------------\n')
         mean.table<-tapply.stat(resp[fatores[,2]==lf2[i] & fatores[,3]==lf3[j]], fatores[,1][Fator2==lf2[i] & Fator3==lf3[j]],mean)
         colnames(mean.table)<-c('  Levels','    Means')
         print(mean.table)
@@ -1030,7 +1073,10 @@ for(k in 1:nv1) {
                         if(mcomp=='ccboot'){
                           ccboot(resp[fatores[,1]==lf1[k] & fatores[,3]==lf3[j]],fatores[,2][Fator1==lf1[k] & fatores[,3]==lf3[j]],an[8,1],an[8,2],sigT)
                                         }
-                      }
+                        if(mcomp=='ccf'){
+                          ccf(resp[fatores[,1]==lf1[k] & fatores[,3]==lf3[j]],fatores[,2][Fator1==lf1[k] & fatores[,3]==lf3[j]],an[8,1],an[8,2],sigT)
+                                        }
+                            }
     else{  #regressao
         cat('\n\n',fac.names[2],' inside of the combination of the levels ',lf1[k],' of ',fac.names[1],' and ',lf3[j],' of ',fac.names[3],'
 ------------------------------------------------------------------------')
@@ -1039,6 +1085,7 @@ for(k in 1:nv1) {
                              }
     else{cat('\n\n',fac.names[2],' inside of the combination of the levels ',lf1[k],' of ',fac.names[1],' and ',lf3[j],' of ',fac.names[3],'\n')
     cat('\nAccording to the F test, the means of this factor are statistical equal.\n')
+    cat('------------------------------------------------------------------------\n')
         mean.table<-tapply.stat(resp[fatores[,1]==lf1[k] & fatores[,3]==lf3[j]],fatores[,2][Fator1==lf1[k] & fatores[,3]==lf3[j]],mean)
         colnames(mean.table)<-c('  Levels','    Means')
         print(mean.table)
@@ -1111,7 +1158,10 @@ for(k in 1:nv1) {
                         if(mcomp=='ccboot'){
                           ccboot(resp[fatores[,1]==lf1[k] & fatores[,2]==lf2[i]],fatores[,3][fatores[,1]==lf1[k] & fatores[,2]==lf2[i]],an[8,1],an[8,2],sigT)
                                         }
-                      }
+                        if(mcomp=='ccf'){
+                          ccf(resp[fatores[,1]==lf1[k] & fatores[,2]==lf2[i]],fatores[,3][fatores[,1]==lf1[k] & fatores[,2]==lf2[i]],an[8,1],an[8,2],sigT)
+                                        }
+                        }
     else{  #regressao
         cat('\n\n',fac.names[3],' inside of the combination of the levels ',lf1[k],' of ',fac.names[1],' and ',lf2[i],' of ',fac.names[2],'
 ------------------------------------------------------------------------')
@@ -1120,6 +1170,7 @@ for(k in 1:nv1) {
                              }
     else{cat('\n\n',fac.names[3],' inside of the combination of the levels ',lf1[k],' of ',fac.names[1],' and ',lf2[i],' of ',fac.names[2],'\n')
     cat('\nAccording to the F test, the means of this factor are statistical equal.\n')
+    cat('------------------------------------------------------------------------\n')
         mean.table<-tapply.stat(resp[fatores[,1]==lf1[k] & fatores[,2]==lf2[i]],fatores[,3][fatores[,1]==lf1[k] & fatores[,2]==lf2[i]],mean)
         colnames(mean.table)<-c('  Levels','    Means')
         print(mean.table)
@@ -1129,5 +1180,21 @@ for(k in 1:nv1) {
                 }
 
 }
-
+#Saida
+out<-list()
+out$residuals<-anava$residuals
+out$df.residual<-anava$df.residual
+out$coefficients<-anava$coefficients
+out$effects<-anava$effects
+out$fitted.values<-anava$fitted.values
+out$means.factor1<-tapply.stat(resp,fatores[,1],mean)
+out$means.factor2<-tapply.stat(resp,fatores[,2],mean)
+out$means.factor3<-tapply.stat(resp,fatores[,3],mean)
+tabmedia<-model.tables(anava, "means")
+out$means.inside12<-tabmedia$tables$`Fator1:Fator2`
+out$means.inside13<-tabmedia$tables$`Fator1:Fator3`
+out$means.inside23<-tabmedia$tables$`Fator2:Fator3`
+out$means.inside123<-tabmedia$tables$`Fator1:Fator2:Fator3`
+#if(quali==FALSE && tab[[1]][1,5]<sigF) {out$reg<-reg}
+invisible(out)
 }

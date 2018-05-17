@@ -2,14 +2,11 @@
 \Rdversion{1.1}
 \alias{fat2.rbd}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Double factorial scheme in RBD
-}
-\description{
-Analyses experiments in balanced Randomized Blocks Designs in double factorial scheme, considering a fixed model.
-}
+\title{Double factorial scheme in RBD}
+\description{Analyses experiments in balanced Randomized Blocks Designs in double factorial scheme, considering a fixed model.}
 \usage{
-fat2.rbd(factor1, factor2, block, resp, quali = c(TRUE, TRUE), mcomp = "tukey", fac.names = c("F1", "F2"), sigT = 0.05, sigF = 0.05)
+fat2.rbd(factor1, factor2, block, resp, quali = c(TRUE, TRUE), mcomp = "tukey", 
+fac.names = c("F1", "F2"), sigT = 0.05, sigF = 0.05)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,9 +15,7 @@ fat2.rbd(factor1, factor2, block, resp, quali = c(TRUE, TRUE), mcomp = "tukey", 
   \item{block}{Numeric or complex vector containing the blocks.}
   \item{resp}{Numeric or complex vector containing the response variable.}
   \item{quali}{Logic. If TRUE (default), the treatments are assumed qualitative, if FALSE, quantitatives.}
-  \item{mcomp}{Allows choosing the multiple comparison test; the \emph{default} is the test of Tukey, however, the options are: the LSD test ('lsd'),
-  the LSD test with Bonferroni protection ('lsdb'), the test of Duncan ('duncan'), the test of Student-Newman-Keuls ('snk'), the test of Scott-Knott]
-  ('sk') and bootstrap multiple comparison's test ('ccboot').}
+  \item{mcomp}{Allows choosing the multiple comparison test; the \emph{default} is the test of Tukey, however, the options are: the LSD test ('lsd'), the LSD test with Bonferroni protection ('lsdb'), the test of Duncan ('duncan'), the test of Student-Newman-Keuls ('snk'), the test of Scott-Knott ('sk'), the Calinski and Corsten test ('ccf') and bootstrap multiple comparison's test ('ccboot').}
   \item{fac.names}{Allows labeling the factors 1 and 2.}
   \item{sigT}{The signficance to be used for the multiple comparison test; the default is 5\%.}
   \item{sigF}{The signficance to be used for the F test of ANOVA; the default is 5\%.}
@@ -42,18 +37,22 @@ Eric Batista Ferreira
     
 Portya Piscitelli Cavalcanti
 }
-%\note{
-%%  ~~further notes~~
+
+\note{
+The \code{\link{graphics}} can be used to construct regression plots and \code{\link{plotres}} for residuals plots
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-For more examples, see: fat2.crd, fat3.crd, fat3.rbd, fat2.ad.crd, fat2.ad.rbd, fat3.ad.crd and fat3.ad.rbd.
+For more examples, see: \code{\link{fat2.rbd}}, \code{\link{fat3.rbd}}, \code{\link{split2.rbd}}, \code{\link{strip}}, \code{\link{fat2.ad.rbd}} and \code{\link{fat3.ad.rbd}}.
 }
+
 \examples{
 data(ex5)
 attach(ex5)
-fat2.rbd(trat, genero, bloco, sabor ,quali=c(TRUE,TRUE), mcomp="lsd", fac.names=c("Samples","Gender"), sigT = 0.05, sigF = 0.05)
+fat2.rbd(trat, genero, bloco, sabor ,quali=c(TRUE,TRUE), mcomp="lsd", 
+ fac.names=c("Samples","Gender"), sigT = 0.05, sigF = 0.05)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

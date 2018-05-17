@@ -2,12 +2,8 @@
 \Rdversion{1.1}
 \alias{ex4}
 \docType{data}
-\title{
-Composting: Doble Factorial scheme in CRD
-}
-\description{
-Field experiment to test the composting of coffee husk with or without cattle manure at different revolving intervals.
-}
+\title{Composting: Doble Factorial scheme in CRD}
+\description{Field experiment to test the composting of coffee husk with or without cattle manure at different revolving intervals.}
 \usage{data(ex4)}
 \format{
   A data frame with 24 observations on the following 11 variables.

@@ -1,11 +1,8 @@
 \name{ex9}
 \alias{ex9}
 \docType{data}
-\title{
-Vegetated: Split-plot in CRD
-}
-\description{
-Subset of data from an experiment that studied the effect on soil pH of cover crops subjected to trampling
+\title{Vegetated: Split-plot in CRD}
+\description{Subset of data from an experiment that studied the effect on soil pH of cover crops subjected to trampling
  by cattle predominantly under continuous grazing system, analyzed at different depths.}
 \usage{data(ex9)}
 \format{
