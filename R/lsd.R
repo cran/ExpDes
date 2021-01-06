@@ -1,3 +1,35 @@
+#' Multiple comparison: Least Significant Difference test
+#'
+#' \code{lsd} Performs the t test (LSD) for multiple comparison
+#' of means.
+#' @param y Numeric or complex vector containing the response
+#' variable.
+#' @param trt Numeric or complex vector containing the
+#' treatments.
+#' @param DFerror Error degrees of freedom.
+#' @param SSerror Error sum of squares.
+#' @param alpha Significance level.
+#' @param group TRUE or FALSE.
+#' @param main Title.
+#' @return Returns the multiple comparison of means according
+#' to the LSD test.
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#' @author Denismar Alves Nogueira
+#' @author Portya Piscitelli Cavalcanti
+#' @seealso \code{\link{snk}}, \code{\link{duncan}},
+#' \code{\link{ccboot}}, \code{\link{lsdb}},
+#' \code{\link{scottknott}}, \code{\link{tukey}},
+#' \code{\link{ccF}}.
+#' @examples
+#' data(ex1)
+#' attach(ex1)
+#' crd(trat, ig, quali = TRUE, mcomp = "lsd", sigT = 0.05)
+#' @importFrom "stats" "AIC" "coef" "dnorm" "fitted"
+#' "fitted.values" "nls" "ppoints" "pt" "qnorm" "qt"
+#' "residuals"
+#' @export
+
 lsd <-
 function (y, trt, DFerror, SSerror, alpha = 0.05, group = TRUE,    main = NULL)
 {

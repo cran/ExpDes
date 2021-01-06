@@ -1,3 +1,59 @@
+#' Double factorial scheme in RBD
+#'
+#' \code{fat2.rbd} Analyses experiments in balanced
+#' Randomized Blocks Designs in double factorial scheme,
+#' considering a fixed model.
+#' @param factor1 Numeric or complex vector containing the
+#' factor 1 levels.
+#' @param factor2 Numeric or complex vector containing the
+#' factor 2 levels.
+#' @param block Numeric or complex vector containing the
+#' blocks.
+#' @param resp Numeric or complex vector containing the
+#' response variable.
+#' @param quali Logic. If TRUE (default), the treatments
+#' are assumed qualitative, if FALSE, quantitatives.
+#' @param mcomp Allows choosing the multiple comparison
+#' test; the \emph{default} is the test of Tukey, however,
+#' the options are: the LSD test ('lsd'), the LSD test with
+#' Bonferroni protection ('lsdb'), the test of Duncan
+#' ('duncan'), the test of Student-Newman-Keuls ('snk'),
+#' the test of Scott-Knott ('sk'), the Calinski and Corsten
+#' test ('ccF') and bootstrap multiple comparison's test
+#' ('ccboot').
+#' @param fac.names Allows labeling the factors 1 and 2.
+#' @param sigT The signficance to be used for the multiple
+#' comparison test; the default is 5\%.
+#' @param sigF The signficance to be used for the F test of
+#' ANOVA; the default is 5\%.
+#' @details The arguments sigT and mcomp will be used only
+#' when the treatment are qualitative.
+#' @return The output contains the ANOVA of the referred
+#' RBD, the Shapiro-Wilk normality test for the residuals
+#' of the model, the fitted regression models (when the
+#' treatments are quantitative) and/or the multiple
+#' comparison tests (when the treatments are qualitative).
+#' @references BANZATTO, D. A.; KRONKA, S. N.
+#' Experimentacao Agricola. 4 ed. Jaboticabal: Funep.
+#' 2006. 237 p.
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#' @author Denismar Alves Nogueira
+#' @author Portya Piscitelli Cavalcanti
+#' @note The \code{\link{graphics}} can be used to
+#' construct regression plots and \code{\link{plotres}}
+#' for residuals plots.
+#' @seealso \code{\link{fat2.rbd}}, \code{\link{fat3.rbd}},
+#' \code{\link{split2.rbd}}, \code{\link{strip}},
+#' \code{\link{fat2.ad.rbd}} and \code{\link{fat3.ad.rbd}}.
+#' @examples
+#' data(ex5)
+#' attach(ex5)
+#' fat2.rbd(trat, genero, bloco, sabor ,quali =
+#' c(TRUE,TRUE), mcomp = "lsd", fac.names = c("Samples",
+#' "Gender"), sigT = 0.05, sigF = 0.05)
+#' @export
+
 fat2.rbd <-
 function(factor1, factor2, block, resp, quali=c(TRUE,TRUE), mcomp='tukey', fac.names=c('F1','F2'), sigT=0.05, sigF=0.05) {
 
@@ -5,7 +61,6 @@ function(factor1, factor2, block, resp, quali=c(TRUE,TRUE), mcomp='tukey', fac.n
 cat('------------------------------------------------------------------------\nLegend:\n')
 cat('FACTOR 1: ',fac.names[1],'\n')
 cat('FACTOR 2: ',fac.names[2],'\n------------------------------------------------------------------------\n\n')
-
 
 fatores<-cbind(factor1,factor2)
 Fator1<-factor(factor1)
@@ -17,16 +72,13 @@ J<-length(summary(Bloco))
 lf1<-levels(Fator1)
 lf2<-levels(Fator2)
 lfB<-levels(Bloco)
-
 anava<-aov(resp~ Bloco + Fator1*Fator2)
 tab<-summary(anava)
-
- 
 colnames(tab[[1]])<-c('DF','SS','MS','Fc','Pr>Fc')
 tab[[1]]<-rbind(tab[[1]],c(apply(tab[[1]],2,sum)))
 rownames(tab[[1]])<-c('Block',fac.names[1],fac.names[2],paste(fac.names[1],'*',fac.names[2],sep=''),'Residuals','Total')
 cv<-round(sqrt(tab[[1]][5,3])/mean(resp)*100, 2)
-tab[[1]][6,3]=' '
+tab[[1]][6,3]=NA
 cat('\nAnalysis of Variance Table\n------------------------------------------------------------------------\n')
 print(tab[[1]])
 cat('------------------------------------------------------------------------\nCV =',cv,'%\n')
@@ -41,7 +93,7 @@ else{cat('According to Shapiro-Wilk normality test at 5% of significance, residu
 ------------------------------------------------------------------------\n')}
 
 #Para interacao nao significativa, fazer...
-if(tab[[1]][4,5]>sigF) {                                    
+if(tab[[1]][4,5]>sigF) {
 cat('\nNo significant interaction: analyzing the simple effect
 ------------------------------------------------------------------------\n')
 fatores<-data.frame('fator 1'=factor1,'fator 2' = factor2)
@@ -49,7 +101,7 @@ fatores<-data.frame('fator 1'=factor1,'fator 2' = factor2)
 for(i in 1:2){
 
 #Para os fatores QUALITATIVOS, teste de Tukey
-if(quali[i]==TRUE && tab[[1]][i+1,5]<=sigF) {                  
+if(quali[i]==TRUE && tab[[1]][i+1,5]<=sigF) {
     cat(fac.names[i])
       if(mcomp=='tukey'){
     tukey(resp,fatores[,i],tab[[1]][5,1],tab[[1]][5,2],sigT)
@@ -72,8 +124,8 @@ if(quali[i]==TRUE && tab[[1]][i+1,5]<=sigF) {
   if(mcomp=='ccboot'){
     ccboot(resp,fatores[,i],tab[[1]][5,1],tab[[1]][5,2],sigT)
                     }
-  if(mcomp=="ccf"){
-    ccf(resp,fatores[,i],tab[[1]][5,1],tab[[1]][5,2],sigT)
+  if(mcomp=="ccF"){
+    ccF(resp,fatores[,i],tab[[1]][5,1],tab[[1]][5,2],sigT)
                   }
                    }
 if(quali[i]==TRUE && tab[[1]][i+1,5]>sigF) {
@@ -105,8 +157,8 @@ cat('------------------------------------------------------------------------')
 cat('\n')
 }
 
-}            
-      
+}
+
 #Se a interacao for significativa, desdobrar a interacao
 if(tab[[1]][4,5]<=sigF){
 cat("\n\n\nSignificant interaction: analyzing the interaction
@@ -155,8 +207,8 @@ for(j in 1:nv2){ rn<-c(rn, paste(paste(fac.names[1],':',fac.names[2],sep=''),lf2
 
 anavad1<-data.frame("DF"=c(round(c(glB, glb, glf1, glE, glT))),
 "SS"=c(round(c(SQB,SQb,SQf1,SQE,SQT),5)),
-"MS"=c(round(c(QMB,QMb,QMf1,QME),5),''),
-"Fc"=c(round(c(FcB,Fcb,Fcf1),4),'',''),
+"MS"=c(round(c(QMB,QMb,QMf1,QME),5),NA),
+"Fc"=c(round(c(FcB,Fcb,Fcf1),4),NA,NA),
 "Pr>Fc"=c(round(c(1-pf(FcB,glB,glE),1-pf(Fcb,glb,glE),1-pf(Fcf1,glf1,glE)),4),' ', ' '))
 rownames(anavad1)=c("Block",fac.names[2],rn,"Residuals","Total")
 cat('------------------------------------------------------------------------
@@ -191,8 +243,8 @@ for(i in 1:nv2) {
                         if(mcomp=='ccboot'){
                           ccboot(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],tab[[1]][5,1],tab[[1]][5,2],sigT)
                                         }
-                        if(mcomp=="ccf"){
-                          ccf(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],tab[[1]][5,1],tab[[1]][5,2],sigT)
+                        if(mcomp=="ccF"){
+                          ccF(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],tab[[1]][5,1],tab[[1]][5,2],sigT)
                                         }
                       }
     else{  #regressao
@@ -245,8 +297,8 @@ for(i in 1:nv1){ rn<-c(rn, paste(paste(fac.names[2],':',fac.names[1],sep=''),lf1
 
 anavad2<-data.frame("DF"=c(round(c(glB, gla, glf2, glE, glT))),
 "SS"=c(round(c(SQB,SQa,SQf2,SQE,SQT),5)),
-"MS"=c(round(c(QMB,QMa,QMf2,QME),5),''),
-"Fc"=c(round(c(FcB,Fca,Fcf2),4),'',''),
+"MS"=c(round(c(QMB,QMa,QMf2,QME),5),NA),
+"Fc"=c(round(c(FcB,Fca,Fcf2),4),NA,NA),
 "Pr>Fc"=c(round(c(1-pf(FcB,glB,glE),1-pf(Fca,gla,glE),1-pf(Fcf2,glf2,glE)),4),' ', ' '))
 rownames(anavad2)=c("Block",fac.names[1],rn,"Residuals","Total")
 cat('------------------------------------------------------------------------
@@ -281,9 +333,9 @@ for(i in 1:nv1) {
                         if(mcomp=='ccboot'){
                           ccboot(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],tab[[1]][5,1],tab[[1]][5,2],sigT)
                                         }
-                        if(mcomp=="ccf"){
-                          ccf(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],tab[[1]][5,1],tab[[1]][5,2],sigT)
-                                        }                
+                        if(mcomp=="ccF"){
+                          ccF(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],tab[[1]][5,1],tab[[1]][5,2],sigT)
+                                        }
                         }
     else{  #regressao
         cat('\n\n',fac.names[2],' inside of the level ',lf1[i],' of ',fac.names[1],'
@@ -299,7 +351,7 @@ for(i in 1:nv1) {
         print(mean.table)
         cat('------------------------------------------------------------------------\n')
         }
-                              
+
                 }
 }
 #Saida

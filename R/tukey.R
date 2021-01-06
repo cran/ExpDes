@@ -1,3 +1,42 @@
+#' Multiple comparison: Tukey's test
+#'
+#' \code{tukey} Performs the test of Tukey, for multiple
+#' comparison of means.
+#' @param y Numeric or complex vector containing the response
+#' variable.
+#' @param trt Numeric or complex vector containing the
+#' treatments.
+#' @param DFerror Error degrees of freedom.
+#' @param SSerror Error sum of squares.
+#' @param alpha Significance level.
+#' @param group TRUE or FALSE.
+#' @param main Title.
+#' @details It is necessary first makes a analysis of variance.
+#' @return
+#' y  Numeric
+#' trt  factor
+#' DFerror  Numeric
+#' MSerror  Numeric
+#' alpha  Numeric
+#' group Logic
+#' main  Text
+#' @references Principles and procedures of statistics a
+#' biometrical approach Steel and Torry and Dickey. Third
+#' Edition 1997
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#' @author Denismar Alves Nogueira
+#' @author Portya Piscitelli Cavalcanti
+#' (Adapted from Felipe de Mendiburu - GPL)
+#' @seealso \code{\link{scottknott}}, \code{\link{duncan}},
+#' \code{\link{lsd}}, \code{\link{lsdb}}, \code{\link{ccboot}},
+#' \code{\link{snk}}, \code{\link{ccF}}.
+#' @examples
+#' data(ex1)
+#' attach(ex1)
+#' crd(trat, ig, quali = TRUE, mcomp = "tukey", sigT = 0.05)
+#' @export
+
 tukey <-
 function(y, trt, DFerror, SSerror, alpha = 0.05, group = TRUE,    main = NULL){
 

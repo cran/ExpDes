@@ -1,10 +1,46 @@
+#' Regression model plots
+#'
+#' \code{graphics} Plots from regression models fitted in ANOVA.
+#' @param a Output from anova (performed in ExpDes).
+#' @param degree For polynomial models, 1 (linear model) is the
+#' \emph{default}, 2 (quadratic model), 3 (cubic model), "pot"
+#' (Power model), "log" (Logistic model), "gom" (Gompertz model)
+#' and "exp" (Exponential model).
+#' @param mod Logic. Print the model expression and its R2 on
+#' the top of the graphic. The \emph{default} is TRUE.
+#' @param main Title of the plot. Empty is the \emph{default}.
+#' @param sub Subtitle of the plot. Empty is the \emph{default}.
+#' @param xlab Name for axis X.
+#' @param ylab Name for axis Y.
+#' @param pch Caracter type to be used on the observed values.
+#' @param xlim Limits for axis X.
+#' @param ylim Limits for axis Y.
+#' @param bty Type of box the plot is fitted in.
+#' @references STEEL, R. G. D.; TORRIE, J. H. \emph{Principles
+#' and procedures in Statistics: a biometrical approach}.
+#' McGraw-Hill, New York, NY. 1980.
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#' @seealso \code{\link{reg.poly}}, \code{\link{plotres}}.
+#' @examples
+#' data(ex1)
+#' attach(ex1)
+#' a<-crd(trat, ig, quali=FALSE, nl=FALSE)
+#' graphics(a, degree=1)
+#' graphics(a, degree=2)
+#' graphics(a, degree=3)
+#' @importFrom "grDevices" "dev.new"
+#' @importFrom "graphics" "abline" "boxplot" "curve" "hist"
+#' "lines" "mtext" "par" "points" "title"
+#' @export
+
 graphics <-
 function(a, degree = 1, mod = TRUE, main = " ", sub = " ",
          xlab = "Levels (X)", ylab = "Response var (Y)", pch = 19,
          xlim = NULL, ylim = NULL, bty = "o"){
 
 a<-a$reg
-xob<-as.numeric(as.vector(a$'Table of means'[,1]))   
+xob<-as.numeric(as.vector(a$'Table of means'[,1]))
 x<-seq(min(xob), max(xob), by=0.1)
 
 if(degree==1) {
@@ -19,7 +55,7 @@ if(mod==TRUE) mtext(paste('y =',round(b0,3),'+',round(b1,3),
      'x  ', ' R^2 = ', round(a$'R2 linear reg'*100,2),'%'),side=3)
 points(xob, yob, pch=pch)
              }
-             
+
 if(degree==2) {
 dev.new()
 b0<-a$'Coefficients quadratic reg'[1]; b1<-a$'Coefficients quadratic reg'[2]

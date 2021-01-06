@@ -1,3 +1,25 @@
+#' Grouping the treatments averages in a comparison with a
+#' minimum value
+#'
+#' \code{order.stat.SNK} Orders the groups of means according
+#' to the test of SNK.
+#' @param treatment Treatment.
+#' @param means Means of treatment.
+#' @param minimum Minimum value for the comparison.
+#' @return
+#' \itemize{
+#' \item trt Factor
+#' \item means Numeric
+#' \item minimum Numeric
+#' }
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#'  @author Denismar Alves Nogueira
+#'  @author Portya Piscitelli Cavalcanti
+#'  (Adapted from Felipe de Mendiburu - GPL)
+#' @seealso \code{\link{order.group}}.
+#' @export
+
 order.stat.SNK <-
 function (treatment, means, minimum)
 {

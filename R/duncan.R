@@ -1,3 +1,24 @@
+#' Multiple comparison: Duncan test
+#'
+#' \code{duncan} Performs the test of Duncan for multiple
+#' comparison of means.
+#' @param y Numeric or complex vector containing the response
+#' variable.
+#' @param trt Numeric or complex vector containing the
+#' treatments.
+#' @param DFerror Error degrees of freedom.
+#' @param SSerror Error sum of squares.
+#' @param alpha Significance level.
+#' @param group TRUE or FALSE.
+#' @param main Title.
+#' @return Returns the multiple comparison of means according
+#' to the test of Duncan.
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#' @author Denismar Alves Nogueira
+#' @author Portya Piscitelli Cavalcanti
+#' @export
+
 duncan <-
 function (y, trt, DFerror, SSerror, alpha = 0.05, group = TRUE,    main = NULL)
 {

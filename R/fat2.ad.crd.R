@@ -1,3 +1,71 @@
+#' Double factorial scheme plus one additional treatment in CRD
+#'
+#' \code{fat2.ad.crd} Analyses experiments in balanced
+#' Completely Randomized Design in double factorial scheme
+#' with an additional treatment, considering a fixed model.
+#' @param factor1 Numeric or complex vector containing the
+#' factor 1 levels.
+#' @param factor2 Numeric or complex vector containing the
+#' factor 2 levels.
+#' @param repet Numeric or complex vector containing the
+#' replications.
+#' @param resp Numeric or complex vector containing the
+#' response variable.
+#' @param respAd Numeric or complex vector containing the
+#' additional treatment.
+#' @param quali Logic. If TRUE (default), the treatments are
+#' assumed qualitative, if FALSE, quantitatives.
+#' @param mcomp Allows choosing the multiple comparison test;
+#' the \emph{default} is the test of Tukey, however, the
+#' options are: the LSD test ('lsd'), the LSD test with
+#' Bonferroni protection ('lsdb'), the test of Duncan
+#' ('duncan'), the test of Student-Newman-Keuls ('snk'), the
+#' test of Scott-Knott ('sk'), the Calinski and Corsten test
+#' ('ccF') and bootstrap multiple comparison's test ('ccboot').
+#' @param fac.names Allows labeling the factors 1 and 2.
+#' @param sigT The signficance to be used for the multiple
+#' comparison test; the default is 5\%.
+#' @param sigF The signficance to be used for the F test of
+#' ANOVA; the default is 5\%.
+#' @details The arguments sigT and mcomp will be used only when
+#' the treatment are qualitative.
+#' @return The output contains the ANOVA of the referred CRD,
+#' the Shapiro-Wilk normality test for the residuals of the
+#' model, the fitted regression models (when the treatments
+#' are quantitative) and/or the multiple comparison tests
+#' (when the treatments are qualitative).
+#' @references HEALY, M. J. R. The analysis of a factorial
+#' experiment with additional treatments. Journal of
+#' Agricultural Science, Cambridge, v. 47, p. 205-206. 1956.
+#'
+#' FERREIRA, E. B.; CAVALCANTI, P. P.; NOGUEIRA D. A. Funcao
+#' para analisar experimentos em fatorial duplo com um
+#' tratamento adicional, em uma so rodada.In: CONGRESSO DE
+#' POS-GRADUACAO DA UNIVERSIDADE FEDERAL DE LAVRAS, 19., 2010,
+#' Lavras. Resumos... Lavras: UFLA, 2010.
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#' @author Denismar Alves Nogueira
+#' @author Portya Piscitelli Cavalcanti
+#' @note The \code{\link{graphics}} can be used to construct
+#' regression plots and \code{\link{plotres}} for residuals
+#' plots.
+#' @seealso \code{\link{fat2.crd}}, \code{\link{fat2.rbd}},
+#' \code{\link{fat3.crd}}, \code{\link{fat3.rbd}},
+#' \code{\link{fat2.ad.crd}}, \code{\link{fat2.ad.rbd}},
+#' \code{\link{fat3.ad.crd}} and \code{\link{fat3.ad.rbd}}.
+#' @examples
+#' data(ex8)
+#' attach(ex8)
+#' data(secaAd)
+#' fat2.ad.crd(inoculante, biodiesel, vaso, seca, secaAd,
+#' quali = c(TRUE,FALSE), mcomp = "tukey", fac.names =
+#' c("Inoculant", "Biodiesel"), sigT = 0.05, sigF = 0.05)
+#' @importFrom "stats" "anova" "aov" "kmeans" "lm"
+#'  "model.tables" "pchisq" "pf" "ptukey" "qtukey"
+#'  "runif" "shapiro.test" "var"
+#' @export
+
 fat2.ad.crd <-
 function(factor1, factor2, repet, resp, respAd, quali=c(TRUE,TRUE), mcomp='tukey', fac.names=c('F1','F2'), sigT=0.05, sigF=0.05) {
 
@@ -18,7 +86,6 @@ n.trat2<-nv1*nv2
 
 #ANAVA do fatorial 2
 anavaF2<-summary(aov(resp~Fator1*Fator2))
-
 (SQa<-anavaF2[[1]][1,2])
 (SQb<-anavaF2[[1]][2,2])
 (SQab<-anavaF2[[1]][3,2])
@@ -35,31 +102,25 @@ tabF2ad<-data.frame("TRAT2"=col1, "REP"=col2, "RESP2"=col3)
 TRAT2<-factor(tabF2ad[,1])
 anava<-aov(tabF2ad[,3] ~ TRAT2)
 anavaTr<-summary(anava)
-
-
 SQad<-anavaTr[[1]][1,2] - (SQa+SQb+SQab)
 SQE<-anavaTr[[1]][2,2]
 SQT<-anavaTr[[1]][1,2]+anavaTr[[1]][2,2]
-
 gla=nv1-1
 glb=nv2-1
 glab=(nv1-1)*(nv2-1)
 glad=1
 glE=(nv1*nv2+1)*(J-1)
 glT=(nv1*nv2+1)*J-1
-
 QMa=SQa/gla
 QMb=SQb/glb
 QMab=SQab/glab
 QMad=SQad/glad
 QME=SQE/glE
 QMT=SQT/glT
-
 Fca=QMa/QME
 Fcb=QMb/QME
 Fcab=QMab/QME
 Fcad=QMad/QME
-
 pv.fs=c(1-pf(Fca,gla,glE), 1-pf(Fcb,glb,glE))
 
 #Montando a tabela da ANAVA
@@ -75,7 +136,7 @@ Analysis of Variance Table\n----------------------------------------------------
 print(anavaT)
 cat('------------------------------------------------------------------------\n')
 #CV
-cv<-round(sqrt(as.numeric(anavaT[5,3]))/mean(col3)*100, 2)
+cv<-round(sqrt(QME)/mean(col3)*100, 2)
 cat('CV =',cv,'%\n')
 
 #Teste de normalidade
@@ -138,8 +199,8 @@ if(quali[i]==TRUE && pv.fs[i]<=sigF) {
   if(mcomp=='ccboot'){
      ccboot(resp,fatores[,i],anavaT[5,1],anavaT[5,2],sigT)
                     }
-  if(mcomp=="ccf"){
-    ccf(resp,fatores[,i],anavaT[5,1],anavaT[5,2],sigT)
+  if(mcomp=="ccF"){
+    ccF(resp,fatores[,i],anavaT[5,1],anavaT[5,2],sigT)
                   }
                    }
 if(quali[i]==TRUE && pv.fs[i]>sigF) {
@@ -247,8 +308,8 @@ for(i in 1:nv2) {
                         if(mcomp=='ccboot'){
                           ccboot(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],anavaT[5,1],anavaT[5,2],sigT)
                                         }
-                        if(mcomp=="ccf"){
-                          ccf(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],anavaT[5,1],anavaT[5,2],sigT)
+                        if(mcomp=="ccF"){
+                          ccF(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],anavaT[5,1],anavaT[5,2],sigT)
                                         }
                       }
     else{  #regressao
@@ -336,8 +397,8 @@ for(i in 1:nv1) {
                         if(mcomp=='ccboot'){
                           ccboot(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],anavaT[5,1],anavaT[5,2],sigT)
                                         }
-                        if(mcomp=="ccf"){
-                          ccf(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],anavaT[5,1],anavaT[5,2],sigT)
+                        if(mcomp=="ccF"){
+                          ccF(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],anavaT[5,1],anavaT[5,2],sigT)
                                         }
                       }
     else{  #regressao

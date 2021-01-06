@@ -1,3 +1,19 @@
+#' Generalized inverse
+#'
+#' \code{ginv} Computes the Moore-Penrose generalized inverse
+#' of a matrix X.
+#' @param X Matrix for which the Moore-Penrose inverse is
+#' required.
+#' @param tol A relative tolerance to detect zero singular
+#' values.
+#' @return A MP generalized inverse matrix for X.
+#' @references Venables, W. N. and Ripley, B. D. (1999) Modern
+#' Applied Statistics with S-PLUS. Third Edition. Springer.
+#' p.100.
+#' @seealso \code{\link{solve}}, \code{\link{svd}},
+#' \code{\link{eigen}}
+#' @export
+
 ginv <-
 function(X, tol = sqrt(.Machine$double.eps))
 {

@@ -1,3 +1,23 @@
+#' Statistics of data grouped by factors
+#'
+#' \code{tapply.stat} This process lies in finding statistics
+#' which consist of more than one variable, grouped or crossed
+#' by factors. The table must be organized by columns between
+#' variables and factors.
+#' @param y Data.frame variables.
+#' @param x Data.frame factors.
+#' @param stat Method.
+#' @return
+#' y Numeric
+#' x Numeric
+#' stat method = "mean", ...
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#' @author Denismar Alves Nogueira
+#' @author Portya Piscitelli Cavalcanti
+#' (Adapted from Felipe de Mendiburu - GPL)
+#' @export
+
 tapply.stat <-
 function(y, x, stat = "mean")
 {

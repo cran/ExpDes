@@ -1,3 +1,31 @@
+#' Multiple comparison: Student-Newman-Keuls test
+#'
+#' \code{snk} Performs the test of SNK, for multiple
+#' comparison of means.
+#' @param y Numeric or complex vector containing the response
+#' variable.
+#' @param trt Numeric or complex vector containing the
+#' treatments.
+#' @param DFerror Error degrees of freedom.
+#' @param SSerror Error sum of squares.
+#' @param alpha Significance level.
+#' @param group TRUE or FALSE.
+#' @param main Title.
+#' @return Returns the multiple comparison of means according
+#' to the test of SNK.
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#' @author Denismar Alves Nogueira
+#' @author Portya Piscitelli Cavalcanti
+#' @seealso \code{\link{scottknott}}, \code{\link{duncan}},
+#' \code{\link{lsd}}, \code{\link{lsdb}}, \code{\link{ccboot}},
+#' \code{\link{tukey}}, \code{\link{ccF}}.
+#' @examples
+#' data(ex1)
+#' attach(ex1)
+#' crd(trat, ig, quali = TRUE, mcomp = "snk", sigT = 0.05)
+#' @export
+
 snk <-
 function (y, trt, DFerror, SSerror, alpha = 0.05, group = TRUE,    main = NULL)
 {

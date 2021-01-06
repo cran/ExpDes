@@ -1,5 +1,28 @@
+#' Polinomial Regression
+#'
+#' \code{reg.poly} Fits sequential regression models until the
+#' third power.
+#' @param treat Numeric or complex vector containing the
+#' treatments.
+#' @param resp Numeric or complex vector containing the
+#' response variable.
+#' @param DFerror Error degrees of freedom.
+#' @param SSerror Error sum of squares.
+#' @param DFtreat Treatments' dregrees of freedom.
+#' @param SStreat Treatments' sum of squares.
+#' @return Returns coefficients, significance and ANOVA of the
+#' fitted regression models.
+#' @references GOMES, F. P. Curso de Estatistica Experimental.
+#' 10a ed. Piracicaba: ESALQ/USP. 1982. 430.
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#' @author Denismar Alves Nogueira
+#' @author Portya Piscitelli Cavalcanti
+#' @seealso \code{\link{graphics}}.
+#' @export
+
 reg.poly <-
-function(resp, treat, DFerror, SSerror, DFtreat, SStreat) { 
+function(resp, treat, DFerror, SSerror, DFtreat, SStreat) {
 
 MSerror<-SSerror/DFerror
 
@@ -19,7 +42,7 @@ colnames(mean.table)<-c('  Levels','   Observed Means')
 b=ginv(t(X[,1:2])%*%X[,1:2], tol=.Machine$double.eps)%*%t(X[,1:2])%*%resp
 ep = sqrt(diag(ginv(t(X[,1:2])%*%X[,1:2], tol=.Machine$double.eps)*MSerror))
 tc = b/ep
-pv = 2*pt(abs(tc),DFerror,lower.tail=FALSE)     
+pv = 2*pt(abs(tc),DFerror,lower.tail=FALSE)
 tm1<-data.frame('Estimate' = round(b,8),'Standard Error' = round(ep,5),'tc'=round(tc,5),'p-value' = round(pv,5))
 rownames(tm1)<-c('b0','b1')
 
@@ -57,7 +80,7 @@ cat('------------------------------------------------------------------------\n'
 b2=ginv(t(X[,1:3])%*%X[,1:3], tol=.Machine$double.eps)%*%t(X[,1:3])%*%resp
 ep2 = sqrt(diag(ginv(t(X[,1:3])%*%X[,1:3], tol=.Machine$double.eps)*MSerror))
 tc2 = b2/ep2
-pv2 = 2*pt(abs(tc2),DFerror,lower.tail=FALSE)  
+pv2 = 2*pt(abs(tc2),DFerror,lower.tail=FALSE)
 tm2<-data.frame('Estimate' = round(b2,8),'Standard Error' = round(ep2,5),'tc'=round(tc2,5),'p-value' = round(pv2,5))
 rownames(tm2)<-c('b0','b1','b2')
 
@@ -95,7 +118,7 @@ cat('------------------------------------------------------------------------\n'
 b3=ginv(t(X[,1:4])%*%X[,1:4], tol=.Machine$double.eps)%*%t(X[,1:4])%*%resp
 ep3 = sqrt(diag(ginv(t(X[,1:4])%*%X[,1:4], tol=.Machine$double.eps)*MSerror))
 tc3 = b3/ep3
-pv3 = 2*pt(abs(tc3),DFerror,lower.tail=FALSE)  
+pv3 = 2*pt(abs(tc3),DFerror,lower.tail=FALSE)
 tm3<-data.frame('Estimate' = round(b3,8),'Standard Error' = round(ep3,5),'tc'=round(tc3,5),'p-value' = round(pv3,5))
 rownames(tm3)<-c('b0','b1','b2','b3')
 
@@ -104,7 +127,7 @@ aov.m3<-anova(lm(resp~treat+t2+t3))
 if(dim(mean.table)[1]==4){r2m3<-1}
 if(dim(mean.table)[1]>4) {r2m3<-(aov.m3[1,2]+aov.m3[2,2]+aov.m3[3,2])/SStreat}
 
-#ANOVA of cubic regression 
+#ANOVA of cubic regression
 nomes3<-c("Linear Effect","Quadratic Effect","Cubic Effect","Lack of fit","Residuals")
 anava3<-data.frame('DF'=c(aov.m3[[1]][1:3],(gld=c(DFtreat-3)),(glr=DFerror)),
                   'SS'=c(round(c(aov.m3[[2]][1:3],(sqd=c(SStreat-sum(aov.m3[[2]][1:3]))),SSerror),5)),
@@ -115,7 +138,7 @@ rownames(anava3)<-nomes3
 
 output3<-list('Cubic Model
 ------------------------------------------------------------------------' = tm3,
-             'R2 of cubic model' = r2m3, 
+             'R2 of cubic model' = r2m3,
              'Analysis of Variance of cubic model' = anava3
               )
 #print(output3,right=TRUE)

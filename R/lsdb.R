@@ -1,3 +1,34 @@
+#' Multiple comparison: Bonferroni's Least Significant
+#' Difference test
+#'
+#' \code{lsdb} Performs the t test (LSD) with Bonferroni's
+#' protection, for multiple comparison of means.
+#' @param y Numeric or complex vector containing the response
+#' variable.
+#' @param trt Numeric or complex vector containing the
+#' treatments.
+#' @param DFerror Error degrees of freedom.
+#' @param SSerror Error sum of squares.
+#' @param alpha Significance level.
+#' @param group TRUE or FALSE.
+#' @param main Title.
+#' @return Returns the multiple comparison of means according
+#' to the LSDB test.
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#' @author Denismar Alves Nogueira
+#' @author Portya Piscitelli Cavalcanti
+#' @seealso \code{\link{snk}}, \code{\link{duncan}},
+#' \code{\link{ccboot}}, \code{\link{lsd}},
+#' \code{\link{scottknott}}, \code{\link{tukey}},
+#' \code{\link{ccF}}.
+#' @examples
+#' data(ex1)
+#' attach(ex1)
+#' crd(trat, ig, quali = TRUE, mcomp = "lsdb", sigT = 0.05)
+#' @importFrom "utils" "combn" "read.table"
+#' @export
+
 lsdb <-
 function (y, trt, DFerror, SSerror, alpha = 0.05, group = TRUE,    main = NULL)
 {

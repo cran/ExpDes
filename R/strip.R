@@ -1,7 +1,54 @@
+#' Strip-plot experiments
+#'
+#' \code{strip} Analysis Strip-plot experiments.
+#' @param factor1 Numeric or complex vector containing the
+#' factor 1 levels.
+#' @param factor2 Numeric or complex vector containing the
+#' factor 2 levels.
+#' @param block Numeric or complex vector containing the blocks.
+#' @param resp Numeric or complex vector containing the
+#' response variable.
+#' @param quali Logic. If TRUE (default), the treatments
+#' are assumed qualitative, if FALSE, quantitatives.
+#' @param mcomp Allows choosing the multiple comparison
+#' test; the \emph{default} is the test of Tukey, however,
+#' the options are: the LSD test ('lsd'), the LSD test
+#' with Bonferroni protection ('lsdb'), the test of Duncan
+#' ('duncan'), the test of Student-Newman-Keuls ('snk'),
+#' the test of Scott-Knott ('sk'), the Calinski and
+#' Corsten test ('ccF') and bootstrap multiple comparison's
+#' test ('ccboot').
+#' @param fac.names Allows labeling the factors 1 and 2.
+#' @param sigT The signficance to be used for the multiple
+#' comparison test; the default is 5\%.
+#' @param sigF The signficance to be used for the F test
+#' of ANOVA; the default is 5\%.
+#' @details The arguments sigT and mcomp will be used only
+#' when the treatment are qualitative.
+#' @return The output contains the ANOVA of the referred
+#' RBD, the Shapiro-Wilk normality test for the residuals
+#' of the model, the fitted regression models (when the
+#' treatments are quantitative) and/or the multiple
+#' comparison tests (when the treatments are qualitative).
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#' @author Laís Brambilla Storti Ferreira
+#' @note The \code{\link{graphics}} can be used to
+#' construct regression plots and \code{\link{plotres}}
+#' for residuals plots.
+#' @seealso \code{\link{split2.rbd}} and \code{\link{rbd}}.
+#' @examples
+#' data(ex5)
+#' attach(ex5)
+#' strip(trat, genero, bloco, sabor, quali = c(TRUE,TRUE),
+#' mcomp = "tukey", fac.names = c("Amostras","Genero"),
+#' sigT = 0.05, sigF = 0.05)
+#' @export
+
 strip <-
 function(factor1, factor2, block, resp, quali=c(TRUE,TRUE), mcomp='tukey', fac.names=c('F1','F2'), sigT=0.05, sigF=0.05) {
 
-                                                                                                                                               
+
 cat('------------------------------------------------------------------------\nLegend:\n')
 cat('FACTOR 1 (Whole plot): ',fac.names[1],'\n')
 cat('FACTOR 2 (strip-plot): ',fac.names[2],'\n------------------------------------------------------------------------\n\n')
@@ -56,17 +103,17 @@ cat('\nNo significant interaction: analyzing the main effects
 ------------------------------------------------------------------------\n')
 
 for(i in 1:2){
-    
+
 #Para os fatores QUALITATIVOS, teste de medias
 if(quali[i]==TRUE && as.numeric(tab[cont[i],5])<=sigF) {
     cat(fac.names[i])
-    
+
   if(mcomp=='tukey'){
     tukey(resp,fatores[,i],as.numeric(tab[cont[i]+1,1]), as.numeric(tab[cont[i]+1,2]),sigT)
                     }
   if(mcomp=='duncan'){
-    duncan(resp,fatores[,i],as.numeric(tab[cont[i]+1,1]), as.numeric(tab[cont[i]+1,2]),sigT)            
-                    }                   
+    duncan(resp,fatores[,i],as.numeric(tab[cont[i]+1,1]), as.numeric(tab[cont[i]+1,2]),sigT)
+                    }
   if(mcomp=='lsd'){
     lsd(resp,fatores[,i],as.numeric(tab[cont[i]+1,1]), as.numeric(tab[cont[i]+1,2]),sigT)
                     }
@@ -82,8 +129,8 @@ if(quali[i]==TRUE && as.numeric(tab[cont[i],5])<=sigF) {
   if(mcomp=="ccboot"){
   ccboot(resp,fatores[,i],as.numeric(tab[cont[i]+1,1]), as.numeric(tab[cont[i]+1,2]),sigT)
                      }
-  if(mcomp=="ccf"){
-  ccf(resp,fatores[,i],as.numeric(tab[cont[i]+1,1]), as.numeric(tab[cont[i]+1,2]),sigT)
+  if(mcomp=="ccF"){
+  ccF(resp,fatores[,i],as.numeric(tab[cont[i]+1,1]), as.numeric(tab[cont[i]+1,2]),sigT)
                      }
           }
 
@@ -166,17 +213,17 @@ print(tab.f1f2)
 for(i in 1:nv2) {
 
     cat('\n',fac.names[1], 'inside', fac.names[2], l2[i] )
-    cat('\n------------------------------------------------------------------------')     
+    cat('\n------------------------------------------------------------------------')
 
-  if(quali[1]==TRUE & as.numeric(tab.f1f2[i,5])<=sigF) {             
-      
+  if(quali[1]==TRUE & as.numeric(tab.f1f2[i,5])<=sigF) {
+
     if(mcomp=='tukey'){
     tukey(resp[fatores[,2]==l2[i]], fatores[,1][fatores[,2]==l2[i]], as.numeric(tab.f1f2[nv2+1,1]),as.numeric(tab.f1f2[nv2+1,2]), sigT)
                       }
 
   if(mcomp=='duncan'){
-    duncan(resp[fatores[,2]==l2[i]],fatores[,1][fatores[,2]==l2[i]],as.numeric(tab.f1f2[nv2+1,1]),as.numeric(tab.f1f2[nv2+1,2]),sigT)            
-                    }                   
+    duncan(resp[fatores[,2]==l2[i]],fatores[,1][fatores[,2]==l2[i]],as.numeric(tab.f1f2[nv2+1,1]),as.numeric(tab.f1f2[nv2+1,2]),sigT)
+                    }
 
   if(mcomp=='lsd'){
     lsd(resp[fatores[,2]==l2[i]],fatores[,1][fatores[,2]==l2[i]],as.numeric(tab.f1f2[nv2+1,1]),as.numeric(tab.f1f2[nv2+1,2]),sigT)
@@ -196,8 +243,8 @@ for(i in 1:nv2) {
   if(mcomp=="ccboot"){
   ccboot(resp[fatores[,2]==l2[i]],fatores[,1][fatores[,2]==l2[i]],as.numeric(tab.f1f2[nv2+1,1]),as.numeric(tab.f1f2[nv2+1,2]),sigT)
                      }
-  if(mcomp=="ccf"){
-  ccf(resp[fatores[,2]==l2[i]],fatores[,1][fatores[,2]==l2[i]],as.numeric(tab.f1f2[nv2+1,1]),as.numeric(tab.f1f2[nv2+1,2]),sigT)
+  if(mcomp=="ccF"){
+  ccF(resp[fatores[,2]==l2[i]],fatores[,1][fatores[,2]==l2[i]],as.numeric(tab.f1f2[nv2+1,1]),as.numeric(tab.f1f2[nv2+1,2]),sigT)
                      }
                                                    }
 
@@ -205,7 +252,7 @@ if(quali[1]==FALSE & as.numeric(tab.f1f2[i,5])<sigF) {             #Fazer regres
     reg.poly(resp[fatores[,2]==l2[i]], fatores[,1][fatores[,2]==l2[i]], as.numeric(tab.f1f2[nv2+1,1]),
     as.numeric(tab.f1f2[nv2+1,2]), as.numeric(tab.f1f2[i,1]), as.numeric(tab.f1f2[i,2]))
                                                    }
-            
+
 if(as.numeric(tab.f1f2[i,5])>sigF) {
     cat('\nAccording to F test, the means of this factor are not distinct.\n')
     cat('------------------------------------------------------------------------\n')
@@ -261,18 +308,18 @@ print(tab.f2f1)
 for(i in 1:nv1) {
 
     cat('\n',fac.names[2], 'inside', fac.names[1], l1[i] )
-    cat('\n------------------------------------------------------------------------')     
+    cat('\n------------------------------------------------------------------------')
 
 
   if(quali[2]==TRUE & as.numeric(tab.f2f1[i,5])<sigF) {             #Fazer teste de comparacao multipla
-    
+
     if(mcomp=='tukey'){
     tukey(resp[fatores[,1]==l1[i]], fatores[,2][fatores[,1]==l1[i]], as.numeric(tab.f2f1[nv1+1,1]),as.numeric(tab.f2f1[nv1+1,2]),sigT)
                     }
 
   if(mcomp=='duncan'){
     duncan(resp[fatores[,1]==l1[i]],fatores[,2][fatores[,1]==l1[i]],as.numeric(tab.f2f1[nv1+1,1]),as.numeric(tab.f2f1[nv1+1,2]),sigT)
-                    }                   
+                    }
 
   if(mcomp=='lsd'){
     lsd(resp[fatores[,1]==l1[i]],fatores[,2][fatores[,1]==l1[i]],as.numeric(tab.f2f1[nv1+1,1]),as.numeric(tab.f2f1[nv1+1,2]),sigT)
@@ -292,18 +339,18 @@ for(i in 1:nv1) {
   if(mcomp=="ccboot"){
   ccboot(resp[fatores[,1]==l1[i]],fatores[,2][fatores[,1]==l1[i]],as.numeric(tab.f2f1[nv1+1,1]),as.numeric(tab.f2f1[nv1+1,2]),sigT)
                      }
-  if(mcomp=="ccf"){
-  ccf(resp[fatores[,1]==l1[i]],fatores[,2][fatores[,1]==l1[i]],as.numeric(tab.f2f1[nv1+1,1]),as.numeric(tab.f2f1[nv1+1,2]),sigT)
+  if(mcomp=="ccF"){
+  ccF(resp[fatores[,1]==l1[i]],fatores[,2][fatores[,1]==l1[i]],as.numeric(tab.f2f1[nv1+1,1]),as.numeric(tab.f2f1[nv1+1,2]),sigT)
                      }
     cat('------------------------------------------------------------------------\n\n')
                                                       }
-    
+
 
   if(quali[2]==FALSE & as.numeric(tab.f2f1[i,5])<sigF){            #Fazer regressao
-    reg.poly(resp[fatores[,1]==l1[i]], fatores[,2][fatores[,1]==l1[i]], as.numeric(tab.f2f1[nv1+1,1]), 
+    reg.poly(resp[fatores[,1]==l1[i]], fatores[,2][fatores[,1]==l1[i]], as.numeric(tab.f2f1[nv1+1,1]),
     as.numeric(tab.f2f1[nv1+1,2]), as.numeric(tab.f2f1[i,1]), as.numeric(tab.f2f1[i,2]))
                                                    }
-                   
+
 
 if(as.numeric(tab.f2f1[i,5])>sigF) {
     cat('\nAccording to F test, the means of this factor are not distinct.\n')
@@ -312,7 +359,7 @@ if(as.numeric(tab.f2f1[i,5])>sigF) {
     colnames(mean.table)<-c('Levels','Means')
     print(mean.table)
     cat('------------------------------------------------------------------------\n')
-                                                }                 
+                                                }
 
 }
 

@@ -1,3 +1,31 @@
+#' Ordering the treatments according to the multiple comparison
+#'
+#' \code{order.group} It orders the groups of means.
+#' @param trt Treatments.
+#' @param means Means of treatment.
+#' @param N Replications.
+#' @param MSerror Mean square error.
+#' @param Tprob Minimum value for the comparison.
+#' @param std.err Standard error.
+#' @param parameter Constante 1 (Sd), 0.5 (Sx).
+#' @return
+#' \itemize{
+#' \item trt Factor
+#' \item means Numeric
+#' \item N Numeric
+#' \item MSerror Numeric
+#' \item Tprob value between 0 and 1
+#' \item std.err Numeric
+#' \item parameter Constant
+#' }
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#'  @author Denismar Alves Nogueira
+#'  @author Portya Piscitelli Cavalcanti
+#'  (Adapted from Felipe de Mendiburu - GPL)
+#' @seealso \code{\link{order.stat.SNK}}.
+#' @export
+
 order.group <-
 function(trt, means, N, MSerror, Tprob, std.err, parameter = 1)
 {

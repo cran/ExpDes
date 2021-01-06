@@ -1,3 +1,26 @@
+#' Residual plots
+#'
+#' \code{plotres} Residual plots for a output model. Four sets
+#' of plots are produced: (1) Histogram, (2) normal probability
+#' plot for the residual, (3) Standardized Residuals versus
+#' Fitted Values, and (4) box-plot (Standardized Residuals).
+#' @param x Output from anova (performed in ExpDes).
+#' @references STEEL, R. G. D.; TORRIE, J. H. \emph{Principles
+#' and procedures in Statistics: a biometrical approach}.
+#' McGraw-Hill, New York, NY. 1980.
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#'  @author Denismar Alves Nogueira
+#'  @note The default produces four plots regarding the ANOVA
+#'  assumptions.
+#' @seealso \code{\link{graphics}}.
+#' @examples
+#' data(ex1)
+#' attach(ex1)
+#' a<-crd(trat, ig)
+#' plotres(a)
+#' @export
+
 plotres <-function(x){
   resid<-x$residuals
   df.resid<-x$df.residual
@@ -13,7 +36,7 @@ plotres <-function(x){
   #abline(h=0, col = "lightgray", lty = 3)
   #title("Residuals vs Fitted Values")
   #
-  # Grafico2 P-Pplot com as bandas de confiança https://stats.stackexchange.com/questions/111288/confidence-bands-for-qq-line
+  # Grafico2 P-Pplot com as bandas de confian?a https://stats.stackexchange.com/questions/111288/confidence-bands-for-qq-line
   good<-!is.na(resid)
   ord<-order(resid[good])
   ord.x<-resid[good][ord]
@@ -27,7 +50,7 @@ plotres <-function(x){
   abline(b0,b1,col="red",lwd=2)
   conf<-0.95
   zz<-qnorm(1-(1-conf)/2)
-  SE<-(b1/dnorm(z))*sqrt(P*(1-P)/n)     
+  SE<-(b1/dnorm(z))*sqrt(P*(1-P)/n)
   fit.value<-b0+b1*z
   upper<-fit.value+zz*SE
   lower<-fit.value-zz*SE
@@ -35,12 +58,12 @@ plotres <-function(x){
   lines(z,lower,lty=2,lwd=2,col="red")
   title("Normal Q-Q (95%)")
   #
-  # Grafico3 Resíduos standardizados versus Valores Ajustados da Variável Resposta
+  # Grafico3 Res?duos standardizados versus Valores Ajustados da Vari?vel Resposta
   plot(fitted.val, respad, xlab="Fitted Values", ylab="Standardized Residuals")
   abline(h=0,  col = "red", lty = 3)
   title("Standardized Residuals vs Fitted Values")
   #
-  # Grafico4 
+  # Grafico4
   boxplot(respad)
   title("Standardized Residuals")
 }

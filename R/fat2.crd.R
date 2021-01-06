@@ -1,3 +1,57 @@
+#' Double factorial scheme in CRD
+#'
+#' \code{fat2.crd} Analyses experiments in balanced
+#' Completely Randomized Design in double factorial
+#' scheme, considering a fixed model.
+#' @param factor1 Numeric or complex vector containing the
+#' factor 1 levels.
+#' @param factor2 Numeric or complex vector containing the
+#' factor 2 levels.
+#' @param resp Numeric or complex vector containing the
+#' response variable.
+#' @param quali Logic. If TRUE (default), the treatments
+#' are assumed qualitative, if FALSE, quantitatives.
+#' @param mcomp Allows choosing the multiple comparison
+#' test; the \emph{default} is the test of Tukey, however,
+#' the options are: the LSD test ('lsd'), the LSD test
+#' with Bonferroni protection ('lsdb'), the test of Duncan
+#' ('duncan'), the test of Student-Newman-Keuls ('snk'),
+#' the test of Scott-Knott ('sk'), the Calinski and
+#' Corsten test ('ccF') and bootstrap multiple comparison's
+#' test ('ccboot').
+#' @param fac.names Allows labeling the factors 1 and 2.
+#' @param sigT The signficance to be used for the multiple
+#' comparison test; the default is 5\%.
+#' @param sigF The signficance to be used for the F test
+#' of ANOVA; the default is 5\%.
+#' @details The arguments sigT and mcomp will be used only
+#' when the treatment are qualitative.
+#' @return The output contains the ANOVA of the referred
+#' CRD, the Shapiro-Wilk normality test for the residuals
+#' of the model, the fitted regression models (when the
+#' treatments are quantitative) and/or the multiple
+#' comparison tests (when the treatments are qualitative).
+#' @references BANZATTO, D. A.; KRONKA, S. N.
+#' Experimentacao Agricola. 4 ed. Jaboticabal: Funep.
+#' 2006. 237 p.
+#' @author Eric B Ferreira,
+#'  \email{eric.ferreira@@unifal-mg.edu.br}
+#' @author Denismar Alves Nogueira
+#' @author Portya Piscitelli Cavalcanti
+#' @note The \code{\link{graphics}} can be used to
+#' construct regression plots and \code{\link{plotres}}
+#' for residuals plots.
+#' @seealso \code{\link{crd}}, \code{\link{fat3.crd}},
+#' \code{\link{split2.crd}}, \code{\link{fat2.ad.crd}} and
+#' \code{\link{fat3.ad.crd}}.
+#' @examples
+#' data(ex4)
+#' attach(ex4)
+#' fat2.crd(revol, esterco, zn, quali = c(FALSE,TRUE),
+#' mcomp = "tukey", fac.names = c("Revolving","Manure"),
+#' sigT = 0.05, sigF = 0.05)
+#' @export
+
 fat2.crd <-
 function(factor1, factor2, resp, quali=c(TRUE,TRUE), mcomp='tukey', fac.names=c('F1','F2'), sigT=0.05, sigF=0.05) {
 
@@ -5,7 +59,6 @@ function(factor1, factor2, resp, quali=c(TRUE,TRUE), mcomp='tukey', fac.names=c(
 cat('------------------------------------------------------------------------\nLegend:\n')
 cat('FACTOR 1: ',fac.names[1],'\n')
 cat('FACTOR 2: ',fac.names[2],'\n------------------------------------------------------------------------\n\n')
-
 
 fatores<-cbind(factor1,factor2)
 Fator1<-factor(factor1)
@@ -16,12 +69,11 @@ lf1<-levels(Fator1)
 lf2<-levels(Fator2)
 anava<-aov(resp~Fator1*Fator2)
 tab<-summary(anava)
-
 colnames(tab[[1]])<-c('DF','SS','MS','Fc','Pr>Fc')
 tab[[1]]<-rbind(tab[[1]],c(apply(tab[[1]],2,sum)))
 rownames(tab[[1]])<-c(fac.names[1],fac.names[2],paste(fac.names[1],'*',fac.names[2],sep=''),'Residuals','Total')
 cv<-round(sqrt(tab[[1]][4,3])/mean(resp)*100, 2)
-tab[[1]][5,3]=' '
+tab[[1]][5,3]=NA
 cat('\nAnalysis of Variance Table\n------------------------------------------------------------------------\n')
 print(tab[[1]])
 cat('------------------------------------------------------------------------\nCV =',cv,'%\n')
@@ -36,22 +88,22 @@ else{cat('According to Shapiro-Wilk normality test at 5% of significance, residu
 ------------------------------------------------------------------------\n')}
 
 #Para interacao nao significativa, fazer...
-if(tab[[1]][3,5]>sigF) {                            
+if(tab[[1]][3,5]>sigF) {
 cat('\nNo significant interaction: analyzing the simple effect
 ------------------------------------------------------------------------\n')
 fatores<-data.frame('fator 1'=factor1,'fator 2' = factor2)
 
 for(i in 1:2){
-    
+
 #Para os fatores QUALITATIVOS, teste de Tukey
 if(quali[i]==TRUE && tab[[1]][i,5]<=sigF) {
     cat(fac.names[i])
       if(mcomp=='tukey'){
     tukey(resp,fatores[,i],tab[[1]][4,1],tab[[1]][4,2],sigT)
                     }
-  if(mcomp=='duncan'){ 
-    duncan(resp,fatores[,i],tab[[1]][4,1],tab[[1]][4,2],sigT)            
-                    }                   
+  if(mcomp=='duncan'){
+    duncan(resp,fatores[,i],tab[[1]][4,1],tab[[1]][4,2],sigT)
+                    }
   if(mcomp=='lsd'){
     lsd(resp,fatores[,i],tab[[1]][4,1],tab[[1]][4,2],sigT)
                     }
@@ -67,8 +119,8 @@ if(quali[i]==TRUE && tab[[1]][i,5]<=sigF) {
   if(mcomp=='ccboot'){
     ccboot(resp,fatores[,i],tab[[1]][4,1],tab[[1]][4,2],sigT)
                     }
-  if(mcomp=="ccf"){
-    ccf(resp,fatores[,i],tab[[1]][4,1],tab[[1]][4,2],sigT)
+  if(mcomp=="ccF"){
+    ccF(resp,fatores[,i],tab[[1]][4,1],tab[[1]][4,2],sigT)
                     }
                }
 if(quali[i]==TRUE && tab[[1]][i,5]>sigF) {
@@ -145,11 +197,11 @@ Fcf1=QMf1/QME
 
 rn<-numeric(0)
 for(j in 1:nv2){ rn<-c(rn, paste(paste(fac.names[1],':',fac.names[2],sep=''),lf2[j]))}
-              
+
 anavad1<-data.frame("DF"=c(round(c(glb, glf1, glE, glT))),
 "SS"=c(round(c(SQb,SQf1,SQE,SQT),5)),
-"MS"=c(round(c(QMb,QMf1,QME),5),''),
-"Fc"=c(round(c(Fcb,Fcf1),4),'',''),
+"MS"=c(round(c(QMb,QMf1,QME),5),NA),
+"Fc"=c(round(c(Fcb,Fcf1),4),NA,NA),
 "Pr>Fc"=c(round(c(1-pf(Fcb,glb,glE),1-pf(Fcf1,glf1,glE)),4),' ', ' '))
 rownames(anavad1)=c(fac.names[2],rn,"Residuals","Total")
 cat('------------------------------------------------------------------------
@@ -165,10 +217,10 @@ for(i in 1:nv2) {
 ------------------------------------------------------------------------')
                         if(mcomp=='tukey'){
                           tukey(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)
-                                          }                                  
+                                          }
                         if(mcomp=='duncan'){
-                          duncan(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)            
-                                           }                   
+                          duncan(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)
+                                           }
                         if(mcomp=='lsd'){
                           lsd(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)
                                         }
@@ -184,8 +236,8 @@ for(i in 1:nv2) {
                         if(mcomp=='ccboot'){
                           ccboot(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)
                                         }
-                        if(mcomp=="ccf"){
-                          ccf(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)
+                        if(mcomp=="ccF"){
+                          ccF(resp[Fator2==lf2[i]],fatores[,1][Fator2==lf2[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)
                                         }
                       }
     else{  #regressao
@@ -201,14 +253,14 @@ cat('------------------------------------------------------------------------\n'
         colnames(mean.table)<-c('  Levels','    Means')
         print(mean.table)
         cat('------------------------------------------------------------------------\n')
-        }                          
+        }
                  }
 cat('\n\n')
 
 #Desdobramento de FATOR 2 dentro do niveis de FATOR 1
 cat("\nAnalyzing ", fac.names[2], ' inside of each level of ', fac.names[1], '
 ------------------------------------------------------------------------\n')
-    
+
 des2<-aov(resp~Fator1/Fator2)
 
 l2<-vector('list',nv1)
@@ -236,11 +288,11 @@ Fcf2=QMf2/QME
 
 rn<-numeric(0)
 for(i in 1:nv1){ rn<-c(rn, paste(paste(fac.names[2],':',fac.names[1],sep=''),lf1[i]))}
-              
+
 anavad2<-data.frame("DF"=c(round(c(gla, glf2, glE, glT))),
 "SS"=c(round(c(SQa,SQf2,SQE,SQT),5)),
-"MS"=c(round(c(QMa,QMf2,QME),5),''),
-"Fc"=c(round(c(Fca,Fcf2),4),'',''),
+"MS"=c(round(c(QMa,QMf2,QME),5),NA),
+"Fc"=c(round(c(Fca,Fcf2),4),NA,NA),
 "Pr>Fc"=c(round(c(1-pf(Fca,gla,glE),1-pf(Fcf2,glf2,glE)),4),' ', ' '))
 rownames(anavad2)=c(fac.names[1],rn,"Residuals","Total")
 cat('------------------------------------------------------------------------
@@ -258,8 +310,8 @@ for(i in 1:nv1) {
                           tukey(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)
                                           }
                         if(mcomp=='duncan'){
-                          duncan(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)            
-                                           }                   
+                          duncan(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)
+                                           }
                         if(mcomp=='lsd'){
                           lsd(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)
                                         }
@@ -275,8 +327,8 @@ for(i in 1:nv1) {
                         if(mcomp=='ccboot'){
                           ccboot(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)
                                         }
-                        if(mcomp=="ccf"){
-                          ccf(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)
+                        if(mcomp=="ccF"){
+                          ccF(resp[Fator1==lf1[i]],fatores[,2][Fator1==lf1[i]],tab[[1]][4,1],tab[[1]][4,2],sigT)
                                         }
                       }
     else{  #regressao
@@ -292,7 +344,7 @@ cat('------------------------------------------------------------------------\n'
         colnames(mean.table)<-c('  Levels','    Means')
         print(mean.table)
         cat('------------------------------------------------------------------------\n')
-        }                          
+        }
 
                 }
 }
