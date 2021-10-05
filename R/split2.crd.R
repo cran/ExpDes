@@ -26,6 +26,10 @@
 #' comparison test; the default is 5\%.
 #' @param sigF The signficance to be used for the F test
 #' of ANOVA; the default is 5\%.
+#' @param unfold Says what must be done after the ANOVA.
+#' If NULL (\emph{default}), recommended tests are performed;
+#' if '0', just ANOVA is performed; if '1', the simple effects
+#' are tested; if '2', the double interaction is unfolded.
 #' @details The arguments sigT and mcomp will be used only
 #' when the treatment are qualitative.
 #' @return The output contains the ANOVA of the referred
@@ -49,11 +53,19 @@
 #' attach(ex9)
 #' split2.crd(cobertura, prof, rep, pH, quali = c(TRUE, TRUE),
 #' mcomp = "lsd", fac.names = c("Cover", "Depth"), sigT = 0.05,
-#' sigF = 0.05)
+#' sigF = 0.05, unfold=NULL)
 #' @export
 
-split2.crd <-
-function(factor1, factor2, repet, resp, quali=c(TRUE,TRUE), mcomp='tukey', fac.names=c('F1','F2'), sigT=0.05, sigF=0.05) {
+split2.crd <- function(factor1,
+                       factor2,
+                       repet,
+                       resp,
+                       quali=c(TRUE,TRUE),
+                       mcomp='tukey',
+                       fac.names=c('F1','F2'),
+                       sigT=0.05,
+                       sigF=0.05,
+                       unfold=NULL) {
 
 cat('------------------------------------------------------------------------\nLegend:\n')
 cat('FACTOR 1    (plot): ',fac.names[1],'\n')
@@ -63,8 +75,8 @@ cont<-c(1,3)
 Fator1<-factor(factor1)
 Fator2<-factor(factor2)
 repet<-factor(repet)
-nv1<-length(summary(Fator1))   #Diz quantos niveis tem o fator 1.
-nv2<-length(summary(Fator2))   #Diz quantos niveis tem o fator 2.
+nv1<-length(summary(Fator1))
+nv2<-length(summary(Fator2))
 
 anava<-aov(resp ~ Fator1*Fator2 + (Fator1:repet))
 tab1<-summary(anava)
@@ -83,10 +95,9 @@ cv1=sqrt(tab[2,3])/mean(resp)*100
 cv2=sqrt(tab[5,3])/mean(resp)*100
 tab[6,3:5]<-tab[2,4:5]<-NA
 
-
-output<-list('Analysis of Variance Table' = tab)
-cat('------------------------------------------------------------------------\n')
-print(output,right=TRUE)
+cat('------------------------------------------------------------------------
+Analysis of Variance Table\n------------------------------------------------------------------------\n')
+print(tab)
 cat('------------------------------------------------------------------------
 CV 1 =',cv1,'%\nCV 2 =', cv2,'%\n')
 
@@ -111,10 +122,14 @@ if(pvalor.shapiro<0.05){cat('WARNING: at 5% of significance, residuals can not b
 else{cat('According to Shapiro-Wilk normality test at 5% of significance, residuals can be considered normal.
 ------------------------------------------------------------------------\n')}
 
-
+# Creating unfold #########################################
+if(is.null(unfold)){
+  if(as.numeric(tab[4,5])>sigF)  {unfold<-c(unfold,1)}
+  if(as.numeric(tab[4,5])<=sigF) {unfold<-c(unfold,2)}
+}
 
 #Para interacao nao significativa, fazer...
-if(as.numeric(tab[4,5])>sigF) {
+if(any(unfold==1)) {
 cat('\nNo significant interaction: analyzing the main effects
 ------------------------------------------------------------------------\n')
 
@@ -174,14 +189,12 @@ if(quali[i]==FALSE && as.numeric(tab[cont[i],5])>sigF) {
     colnames(mean.table)<-c('Levels','Means')
     print(mean.table)
     cat('------------------------------------------------------------------------')
-                            }
-
+}
 cat('\n')
 }
-
 }
 #Se a interacao for significativa, desdobrar a interacao
-if(as.numeric(tab[4,5])<=sigF) {
+if(any(unfold==2)) {
 cat("\n\n\nSignificant interaction: analyzing the interaction
 ------------------------------------------------------------------------\n")
 

@@ -12,7 +12,8 @@ latsd(
   quali = TRUE,
   mcomp = "tukey",
   sigT = 0.05,
-  sigF = 0.05
+  sigF = 0.05,
+  unfold = NULL
 )
 }
 \arguments{
@@ -43,6 +44,11 @@ comparison test; the default is 5\%.}
 
 \item{sigF}{The signficance to be used for the F test of
 ANOVA; the default is 5\%.}
+
+\item{unfold}{Says what must be done after the ANOVA.
+If NULL (\emph{default}), recommended tests are performed;
+if '0', just ANOVA is performed; if '1', the simple effects
+are tested.}
 }
 \value{
 The output contains the ANOVA of the LSD, the
@@ -63,7 +69,7 @@ when the treatment are qualitative.
 data(ex3)
 attach(ex3)
 latsd(trat, linha, coluna, resp, quali = TRUE, mcomp = "snk",
-sigT = 0.05, sigF = 0.05)
+sigT = 0.05, sigF = 0.05, unfold=NULL)
 }
 \references{
 GOMES, F. P. Curso de Estatistica Experimental.

@@ -28,6 +28,11 @@
 #' comparison test; the default is 5\%.
 #' @param sigF The signficance to be used for the F test of
 #' ANOVA; the default is 5\%.
+#' @param unfold Says what must be done after the ANOVA.
+#' If NULL (\emph{default}), recommended tests are performed;
+#' if '0', just ANOVA is performed; if '1', the simple effects
+#' are tested; if '2.1', '2.2' or '2.3', the double interactions
+#' are unfolded; if '3', the triple interaction is unfolded.
 #' @details The arguments sigT and mcomp will be used only
 #' when the treatment are qualitative.
 #' @return The output contains the ANOVA of the referred
@@ -53,11 +58,21 @@
 #' attach(ex6)
 #' fat3.rbd(fatorA, fatorB, fatorC, rep, resp, quali = c(TRUE,
 #' TRUE, TRUE), mcomp = "tukey", fac.names = c("Factor A",
-#' "Factor B", "Factor C"), sigT = 0.05, sigF = 0.05)
+#' "Factor B", "Factor C"), sigT = 0.05, sigF = 0.05,
+#' unfold=NULL)
 #' @export
 
-fat3.rbd <-
-function(factor1, factor2, factor3, block, resp, quali=c(TRUE,TRUE,TRUE), mcomp='tukey', fac.names=c('F1','F2','F3'), sigT=0.05, sigF=0.05) {
+fat3.rbd <- function(factor1,
+                     factor2,
+                     factor3,
+                     block,
+                     resp,
+                     quali=c(TRUE,TRUE,TRUE),
+                     mcomp='tukey',
+                     fac.names=c('F1','F2','F3'),
+                     sigT=0.05,
+                     sigF=0.05,
+                     unfold=NULL) {
 
 cat('------------------------------------------------------------------------\nLegend:\n')
 cat('FACTOR 1: ',fac.names[1],'\n')
@@ -148,8 +163,23 @@ if(pvalor.shapiro<=0.05){cat('WARNING: at 5% of significance, residuals can not 
 if(pvalor.shapiro>0.05){cat('According to Shapiro-Wilk normality test at 5% of significance, residuals can be considered normal.
 ------------------------------------------------------------------------\n')}
 
-#Para nenhuma interacao significativa, fazer...
-if(1-pf(Fcab,glab,glE)>sigF && 1-pf(Fcac,glac,glE)>sigF && 1-pf(Fcbc,glbc,glE)>sigF && 1-pf(Fcabc,glabc,glE)>sigF) {
+# Creating unfold #########################################
+if(is.null(unfold)){
+  if(1-pf(Fcab,glab,glE)>sigF &&
+     1-pf(Fcac,glac,glE)>sigF &&
+     1-pf(Fcbc,glbc,glE)>sigF &&
+     1-pf(Fcabc,glabc,glE)>sigF){unfold<-c(unfold,1)}
+  if(1-pf(Fcabc,glabc,glE)>sigF &&
+     1-pf(Fcab,glab,glE)<=sigF) {unfold<-c(unfold,2.1)}
+  if(1-pf(Fcabc,glabc,glE)>sigF &&
+     1-pf(Fcac,glac,glE)<=sigF) {unfold<-c(unfold,2.2)}
+  if(1-pf(Fcabc,glabc,glE)>sigF &&
+     1-pf(Fcbc,glbc,glE)<=sigF) {unfold<-c(unfold,2.3)}
+  if(1-pf(Fcabc,glabc,glE)<=sigF){unfold<-c(unfold,3)}
+}
+
+#Para interacao nao significativa, fazer...
+if(any(unfold==1)) {
 cat('\nNo significant interaction: analyzing the simple effect
 ------------------------------------------------------------------------\n')
 fatores<-data.frame('fator 1'=factor1,'fator 2' = factor2,'fator 3' = factor3)
@@ -216,7 +246,7 @@ cat('\n')
 
 #Se a(s) interacao(oes) dupla(s) for(em) significativa(s), desdobramento:
 #Interacao Fator1*Fator2
-if(1-pf(Fcabc,glabc,glE)>sigF && 1-pf(Fcab,glab,glE)<=sigF){
+if(any(unfold==2.1)) {
 cat("\n\n\nSignificant",paste(fac.names[1],'*',fac.names[2],sep='')," interaction: analyzing the interaction
 ------------------------------------------------------------------------\n")
 
@@ -467,7 +497,7 @@ if(pvalor[5]>sigF && pvalor[6]>sigF) {
 }
 
 #Interacao Fator1*Fator3
-if(1-pf(Fcabc,glabc,glE)>sigF && 1-pf(Fcac,glac,glE)<=sigF){
+if(any(unfold==2.2)) {
 cat("\n\n\nSignificant",paste(fac.names[1],'*',fac.names[3],sep='')," interaction: analyzing the interaction
 ------------------------------------------------------------------------\n")
 
@@ -718,7 +748,7 @@ if(pvalor[4]>sigF && pvalor[6]>sigF) {
 }
 
 #Interacao Fator2*Fator3
-if(1-pf(Fcabc,glabc,glE)>sigF && 1-pf(Fcbc,glbc,glE)<=sigF){
+if(any(unfold==2.3)) {
 cat("\n\n\nSignificant",paste(fac.names[2],'*',fac.names[3],sep='')," interaction: analyzing the interaction
 ------------------------------------------------------------------------\n")
 
@@ -973,7 +1003,7 @@ if(pvalor[4]>sigF && pvalor[5]>sigF) {
 
 
 #Para interacao tripla significativa, desdobramento
-if(1-pf(Fcabc,glabc,glE)<=sigF){
+if(any(unfold==3)) {
 cat("\n\n\nSignificant",paste(fac.names[1],'*',fac.names[2],'*',fac.names[3],sep='')," interaction: analyzing the interaction
 ------------------------------------------------------------------------\n")
 

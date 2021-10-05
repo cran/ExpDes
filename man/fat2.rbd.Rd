@@ -13,7 +13,8 @@ fat2.rbd(
   mcomp = "tukey",
   fac.names = c("F1", "F2"),
   sigT = 0.05,
-  sigF = 0.05
+  sigF = 0.05,
+  unfold = NULL
 )
 }
 \arguments{
@@ -48,6 +49,11 @@ comparison test; the default is 5\%.}
 
 \item{sigF}{The signficance to be used for the F test of
 ANOVA; the default is 5\%.}
+
+\item{unfold}{Says what must be done after the ANOVA.
+If NULL (\emph{default}), recommended tests are performed;
+if '0', just ANOVA is performed; if '1', the simple effects
+are tested; if '2', the double interaction is unfolded.}
 }
 \value{
 The output contains the ANOVA of the referred
@@ -75,7 +81,7 @@ data(ex5)
 attach(ex5)
 fat2.rbd(trat, genero, bloco, sabor ,quali =
 c(TRUE,TRUE), mcomp = "lsd", fac.names = c("Samples",
-"Gender"), sigT = 0.05, sigF = 0.05)
+"Gender"), sigT = 0.05, sigF = 0.05, unfold=NULL)
 }
 \references{
 BANZATTO, D. A.; KRONKA, S. N.
@@ -83,7 +89,7 @@ Experimentacao Agricola. 4 ed. Jaboticabal: Funep.
 2006. 237 p.
 }
 \seealso{
-\code{\link{fat2.rbd}}, \code{\link{fat3.rbd}},
+\code{\link{fat3.rbd}},
 \code{\link{split2.rbd}}, \code{\link{strip}},
 \code{\link{fat2.ad.rbd}} and \code{\link{fat3.ad.rbd}}.
 }

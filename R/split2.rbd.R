@@ -25,6 +25,10 @@
 #' comparison test; the default is 5\%.
 #' @param sigF The signficance to be used for the F test
 #' of ANOVA; the default is 5\%.
+#' @param unfold Says what must be done after the ANOVA.
+#' If NULL (\emph{default}), recommended tests are performed;
+#' if '0', just ANOVA is performed; if '1', the simple effects
+#' are tested; if '2', the double interaction is unfolded.
 #' @details The arguments sigT and mcomp will be used only
 #' when the treatment are qualitative.
 #' @return The output contains the ANOVA of the referred
@@ -48,11 +52,19 @@
 #' attach(ex)
 #' split2.rbd(trat, dose, rep, resp, quali = c(TRUE, FALSE),
 #' mcomp = "tukey", fac.names = c("Treatament", "Dose"),
-#' sigT = 0.05, sigF = 0.05)
+#' sigT = 0.05, sigF = 0.05, unfold=NULL)
 #' @export
 
-split2.rbd <-
-function(factor1, factor2, block, resp, quali=c(TRUE,TRUE), mcomp='tukey', fac.names=c('F1','F2'), sigT=0.05, sigF=0.05) {
+split2.rbd <- function(factor1,
+                       factor2,
+                       block,
+                       resp,
+                       quali=c(TRUE,TRUE),
+                       mcomp='tukey',
+                       fac.names=c('F1','F2'),
+                       sigT=0.05,
+                       sigF=0.05,
+                       unfold=NULL) {
 
 cat('------------------------------------------------------------------------\nLegend:\n')
 cat('FACTOR 1 (plot): ',fac.names[1],'\n')
@@ -62,8 +74,8 @@ cont<-c(1,4)
 Fator1<-factor(factor1)
 Fator2<-factor(factor2)
 bloco<-factor(block)
-nv1<-length(summary(Fator1))   #Diz quantos niveis tem o fator 1.
-nv2<-length(summary(Fator2))   #Diz quantos niveis tem o fator 2.
+nv1<-length(summary(Fator1))
+nv2<-length(summary(Fator2))
 
 anava<-aov(resp ~ bloco + Fator1*Fator2 + Error(bloco/Fator1))
 tab1<-summary(anava)
@@ -81,9 +93,9 @@ cv2=sqrt(tab[6,3])/mean(resp)*100
 tab<-round(tab,6)
 tab[7,3]<-NA
 
-output<-list('Analysis of Variance Table' = tab)
-cat('------------------------------------------------------------------------\n')
-print(output,right=TRUE)
+cat('------------------------------------------------------------------------
+Analysis of Variance Table\n------------------------------------------------------------------------\n')
+print(tab)
 cat('------------------------------------------------------------------------
 CV 1 =',cv1,'%\nCV 2 =', cv2,'%\n')
 
@@ -100,9 +112,14 @@ fatores<-data.frame('fator 1' = factor1,'fator 2' = factor2)
 #else{cat('De acordo com o teste de Shapiro-Wilk a 5% de significancia, os residuos podem ser considerados normais.
 #------------------------------------------------------------------------\n')}
 
+# Creating unfold #########################################
+if(is.null(unfold)){
+  if(tab[5,5]>sigF)  {unfold<-c(unfold,1)}
+  if(tab[5,5]<=sigF) {unfold<-c(unfold,2)}
+}
 
 #Para interacao nao significativa, fazer...
-if(tab[5,5]>sigF) {
+if(any(unfold==1)) {
 cat('\nNo significant interaction: analyzing the simple effects
 ------------------------------------------------------------------------\n')
 
@@ -169,7 +186,7 @@ cat('\n')
 
 }
 #Se a interacao for significativa, desdobrar a interacao
-if(as.numeric(tab[5,5])<=sigF) {
+if(any(unfold==1)) {
 cat("\n\n\nSignificant interaction: analyzing the interaction
 ------------------------------------------------------------------------\n")
 

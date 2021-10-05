@@ -15,7 +15,8 @@ fat2.ad.rbd(
   mcomp = "tukey",
   fac.names = c("F1", "F2"),
   sigT = 0.05,
-  sigF = 0.05
+  sigF = 0.05,
+  unfold = NULL
 )
 }
 \arguments{
@@ -53,6 +54,11 @@ comparison test; the default is 5\%.}
 
 \item{sigF}{The signficance to be used for the F test
 of ANOVA; the default is 5\%.}
+
+\item{unfold}{Says what must be done after the ANOVA.
+If NULL (\emph{default}), recommended tests are performed;
+if '0', just ANOVA is performed; if '1', the simple effects
+are tested; if '2', the double interaction is unfolded.}
 }
 \value{
 The output contains the ANOVA of the referred
@@ -81,7 +87,8 @@ attach(ex7)
 data(est21Ad)
 fat2.ad.rbd(periodo, nivel, bloco, est21, est21Ad,
 quali=c(TRUE, FALSE), mcomp = "tukey", fac.names =
-c("Period", "Level"), sigT = 0.05, sigF = 0.05)
+c("Period", "Level"), sigT = 0.05, sigF = 0.05,
+unfold=NULL)
 }
 \references{
 HEALY, M. J. R. The analysis of a factorial
@@ -92,7 +99,7 @@ Agricultural Science, Cambridge, v. 47, p. 205-206.
 \seealso{
 \code{\link{fat2.crd}}, \code{\link{fat2.rbd}},
 \code{\link{fat3.crd}}, \code{\link{fat3.rbd}},
-\code{\link{fat2.ad.crd}}, \code{\link{fat2.ad.rbd}},
+\code{\link{fat2.ad.crd}},
 \code{\link{fat3.ad.crd}} and \code{\link{fat3.ad.rbd}}.
 }
 \author{

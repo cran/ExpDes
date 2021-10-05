@@ -13,7 +13,8 @@ rbd(
   nl = FALSE,
   hvar = "oneillmathews",
   sigT = 0.05,
-  sigF = 0.05
+  sigF = 0.05,
+  unfold = NULL
 )
 }
 \arguments{
@@ -42,16 +43,21 @@ models are adjusted. IF TRUE, non-linear regression models
 are adjusted.}
 
 \item{hvar}{Allows choosing the test for homogeneity of
-variances; the \emph{default} is the test of Bartlett,
-however there are other options: test of Levene ('levene'),
-test of Samiuddin ('samiuddin'), test of ONeill and Mathews
-('oneillmathews') and the Layard test ('layard').}
+variances; the \emph{default} is the test of ONeill and
+Mathews ('oneillmathews'), however there are other options:
+test of Han ('han'), and the test of Anscombe and Tukey
+('anscombetukey').}
 
 \item{sigT}{The signficance to be used for the multiple
 comparison test; the default is 5\%.}
 
 \item{sigF}{The signficance to be used for the F test of
 ANOVA; the default is 5\%.}
+
+\item{unfold}{Says what must be done after the ANOVA.
+If NULL (\emph{default}), recommended tests are performed;
+if '0', just ANOVA is performed; if '1', the simple effects
+are tested.}
 }
 \value{
 The output contains the ANOVA of the RBD, the
@@ -78,7 +84,8 @@ plots.
 data(ex2)
 attach(ex2)
 rbd(trat, provador, aparencia, quali = TRUE, mcomp = "lsd",
-hvar = "oneillmathews", sigT = 0.05, sigF = 0.05)
+hvar = "oneillmathews", sigT = 0.05, sigF = 0.05,
+unfold=NULL)
 }
 \references{
 BANZATTO, D. A.; KRONKA, S. N. Experimentacao

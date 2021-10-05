@@ -29,6 +29,10 @@
 #' comparison test; the default is 5\%.
 #' @param sigF The signficance to be used for the F test of
 #' ANOVA; the default is 5\%.
+#' @param unfold Says what must be done after the ANOVA.
+#' If NULL (\emph{default}), recommended tests are performed;
+#' if '0', just ANOVA is performed; if '1', the simple effects
+#' are tested.
 #' @details The arguments sigT and mcomp will be used only when
 #' the treatment are qualitative.
 #' @return The output contains the ANOVA of the CRD, the
@@ -55,11 +59,18 @@
 #' @examples
 #' data(ex1)
 #' attach(ex1)
-#' crd(trat, ig, quali = FALSE, sigF = 0.05)
+#' crd(trat, ig, quali = FALSE, sigF = 0.05, unfold=NULL)
 #' @export
 
-crd <-function(treat, resp, quali=TRUE, mcomp='tukey', nl=FALSE,
-              hvar='bartlett', sigT=0.05, sigF=0.05) {
+crd <-function(treat,
+               resp,
+               quali=TRUE,
+               mcomp='tukey',
+               nl=FALSE,
+               hvar='bartlett',
+               sigT=0.05,
+               sigF=0.05,
+               unfold=NULL) {
 
 Trat<-factor(treat)
 anova<-aov(resp~Trat)
@@ -118,9 +129,13 @@ if(pvalor.hvar<0.05){cat('WARNING: at 5% of significance, residuals can not be c
 else{cat('According to the test of',hvar,'at 5% of significance, residuals can be considered homocedastic.
 ------------------------------------------------------------------------\n')}
 
+# Creating unfold #########################################
+if(is.null(unfold)){
+  if(tab[[1]][1,5]<=sigF) {unfold<-c(unfold,1)}
+}
 
-if(tab[[1]][1,5]<sigF) {
-
+#For significant factor, do...
+if(any(unfold==1)) {
 
 if(quali==TRUE) {
 

@@ -12,7 +12,8 @@ fat2.crd(
   mcomp = "tukey",
   fac.names = c("F1", "F2"),
   sigT = 0.05,
-  sigF = 0.05
+  sigF = 0.05,
+  unfold = NULL
 )
 }
 \arguments{
@@ -44,6 +45,11 @@ comparison test; the default is 5\%.}
 
 \item{sigF}{The signficance to be used for the F test
 of ANOVA; the default is 5\%.}
+
+\item{unfold}{Says what must be done after the ANOVA.
+If NULL (\emph{default}), recommended tests are performed;
+if '0', just ANOVA is performed; if '1', the simple effects
+are tested; if '2', the double interaction is unfolded.}
 }
 \value{
 The output contains the ANOVA of the referred
@@ -71,7 +77,7 @@ data(ex4)
 attach(ex4)
 fat2.crd(revol, esterco, zn, quali = c(FALSE,TRUE),
 mcomp = "tukey", fac.names = c("Revolving","Manure"),
-sigT = 0.05, sigF = 0.05)
+sigT = 0.05, sigF = 0.05, unfold=NULL)
 }
 \references{
 BANZATTO, D. A.; KRONKA, S. N.

@@ -23,6 +23,10 @@
 #' comparison test; the default is 5\%.
 #' @param sigF The signficance to be used for the F test
 #' of ANOVA; the default is 5\%.
+#' @param unfold Says what must be done after the ANOVA.
+#' If NULL (\emph{default}), recommended tests are performed;
+#' if '0', just ANOVA is performed; if '1', the simple effects
+#' are tested; if '2', the double interaction is unfolded.
 #' @details The arguments sigT and mcomp will be used only
 #' when the treatment are qualitative.
 #' @return The output contains the ANOVA of the referred
@@ -42,12 +46,19 @@
 #' attach(ex5)
 #' strip(trat, genero, bloco, sabor, quali = c(TRUE,TRUE),
 #' mcomp = "tukey", fac.names = c("Amostras","Genero"),
-#' sigT = 0.05, sigF = 0.05)
+#' sigT = 0.05, sigF = 0.05, unfold=NULL)
 #' @export
 
-strip <-
-function(factor1, factor2, block, resp, quali=c(TRUE,TRUE), mcomp='tukey', fac.names=c('F1','F2'), sigT=0.05, sigF=0.05) {
-
+strip <- function(factor1,
+                  factor2,
+                  block,
+                  resp,
+                  quali=c(TRUE,TRUE),
+                  mcomp='tukey',
+                  fac.names=c('F1','F2'),
+                  sigT=0.05,
+                  sigF=0.05,
+                  unfold=NULL) {
 
 cat('------------------------------------------------------------------------\nLegend:\n')
 cat('FACTOR 1 (Whole plot): ',fac.names[1],'\n')
@@ -77,9 +88,9 @@ cv2=sqrt(as.numeric(tab[5,3]))/mean(resp)*100
 cv3=sqrt(as.numeric(tab[7,3]))/mean(resp)*100
 tab<-round(tab,6)
 
-output<-list('Analysis of variance table' = tab)
-cat('------------------------------------------------------------------------\n')
-print(output,right=TRUE)
+cat('------------------------------------------------------------------------
+Analysis of variance table\n------------------------------------------------------------------------\n')
+print(tab)
 cat('------------------------------------------------------------------------
 CV 1 =',cv1,'%\nCV 2 =', cv2,'%\nCV 3 =', cv3,'%\n')
 
@@ -95,10 +106,14 @@ if(pvalor.shapiro<0.05){cat('WARNING: at 5% of significance, residuals can not b
 else{cat('According to Shapiro-Wilk normality test at 5% of significance, residuals can be considered normal.
 ------------------------------------------------------------------------\n')}
 
-
+# Creating unfold #########################################
+if(is.null(unfold)){
+  if(tab[6,5]>sigF)  {unfold<-c(unfold,1)}
+  if(tab[6,5]<=sigF) {unfold<-c(unfold,2)}
+}
 
 #Para interacao nao significativa, fazer...
-if(tab[6,5]>sigF) {
+if(any(unfold==1)) {
 cat('\nNo significant interaction: analyzing the main effects
 ------------------------------------------------------------------------\n')
 
@@ -159,14 +174,12 @@ if(quali[i]==FALSE && as.numeric(tab[cont[i],5])>sigF) {
     colnames(mean.table)<-c('Levels','Means')
     print(mean.table)
     cat('------------------------------------------------------------------------')
-                            }
-
+}
 cat('\n')
 }
-
 }
 #Se a interacao for significativa, desdobrar a interacao
-if(as.numeric(tab[6,5])<=sigF) {
+if(any(unfold==2)) {
 cat("\n\n\nSignificant interaction: analyzing the interaction
 ------------------------------------------------------------------------\n")
 

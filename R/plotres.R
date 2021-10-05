@@ -32,11 +32,6 @@ plotres <-function(x){
   hist(respad, xlab="Standardized Residuals", main="Histogram", freq=FALSE)
   x<-c()
   curve(dnorm(x,mean=0,sd=1),col=2,lty=1,lwd=1,add=TRUE)
-  #plot(fitted.val, resid, xlab="Fitted Values", ylab="Residuals")
-  #abline(h=0, col = "lightgray", lty = 3)
-  #title("Residuals vs Fitted Values")
-  #
-  # Grafico2 P-Pplot com as bandas de confian?a https://stats.stackexchange.com/questions/111288/confidence-bands-for-qq-line
   good<-!is.na(resid)
   ord<-order(resid[good])
   ord.x<-resid[good][ord]
@@ -57,13 +52,12 @@ plotres <-function(x){
   lines(z,upper,lty=2,lwd=2,col="red")
   lines(z,lower,lty=2,lwd=2,col="red")
   title("Normal Q-Q (95%)")
-  #
-  # Grafico3 Res?duos standardizados versus Valores Ajustados da Vari?vel Resposta
+  # Grafic3 
   plot(fitted.val, respad, xlab="Fitted Values", ylab="Standardized Residuals")
-  abline(h=0,  col = "red", lty = 3)
+  abline(h=0,col="red",lty = 3)
   title("Standardized Residuals vs Fitted Values")
-  #
-  # Grafico4
+  # Grafic4
   boxplot(respad)
   title("Standardized Residuals")
+  par(mfrow=c(1,1))
 }

@@ -12,7 +12,8 @@ crd(
   nl = FALSE,
   hvar = "bartlett",
   sigT = 0.05,
-  sigF = 0.05
+  sigF = 0.05,
+  unfold = NULL
 )
 }
 \arguments{
@@ -49,6 +50,11 @@ comparison test; the default is 5\%.}
 
 \item{sigF}{The signficance to be used for the F test of
 ANOVA; the default is 5\%.}
+
+\item{unfold}{Says what must be done after the ANOVA.
+If NULL (\emph{default}), recommended tests are performed;
+if '0', just ANOVA is performed; if '1', the simple effects
+are tested.}
 }
 \value{
 The output contains the ANOVA of the CRD, the
@@ -69,7 +75,7 @@ the treatment are qualitative.
 \examples{
 data(ex1)
 attach(ex1)
-crd(trat, ig, quali = FALSE, sigF = 0.05)
+crd(trat, ig, quali = FALSE, sigF = 0.05, unfold=NULL)
 }
 \references{
 BANZATTO, D. A.; KRONKA, S. N. Experimentacao
